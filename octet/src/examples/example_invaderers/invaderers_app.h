@@ -431,6 +431,7 @@ namespace octet {
       sprites[game_over_sprite].init(GameOver, 20, 0, 3, 1.5f);
 
       GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
+	  invaderer = resource_dict::get_texture_handle(GL_RGBA, "#fff20080");
       for (int j = 0; j != num_rows; ++j) {
         for (int i = 0; i != num_cols; ++i) {
           assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
@@ -441,14 +442,16 @@ namespace octet {
       }
 
       // set the border to white for clarity
-      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");
-      sprites[first_border_sprite+0].init(white, 0, -3, 6, 0.2f);
+	  GLuint blue = resource_dict::get_texture_handle(GL_RGB, "#214f99");    //blue
+      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#fff200");  //yellow
+      sprites[first_border_sprite+0].init(blue, 0, -3, 6, 0.2f);
       sprites[first_border_sprite+1].init(white, 0,  3, 6, 0.2f);
       sprites[first_border_sprite+2].init(white, -3, 0, 0.2f, 6);
       sprites[first_border_sprite+3].init(white, 3,  0, 0.2f, 6);
 
       // use the missile texture
       GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/missile.gif");
+	   missile = resource_dict::get_texture_handle(GL_RGBA, "#fff200");
       for (int i = 0; i != num_missiles; ++i) {
         // create missiles off-screen
         sprites[first_missile_sprite+i].init(missile, 20, 0, 0.0625f, 0.25f);
