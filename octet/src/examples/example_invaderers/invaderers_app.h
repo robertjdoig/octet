@@ -182,6 +182,7 @@ namespace octet {
 
     // accounting for bad guys
     int live_invaderers;
+	bool invaderHit[num_invaderers];
     int num_lives;
 
     // game state
@@ -216,7 +217,7 @@ namespace octet {
       ALuint source = get_sound_source();
       alSourcei(source, AL_BUFFER, bang);
       alSourcePlay(source);
-
+	 
       live_invaderers--;
       score++;
       if (live_invaderers == 4) {
@@ -318,6 +319,7 @@ namespace octet {
               invaderer.translate(20, 0);
               missile.is_enabled() = false;
               missile.translate(20, 0);
+			  invaderHit[j] = true;
               on_hit_invaderer();
 
               goto next_missile;
@@ -433,27 +435,32 @@ namespace octet {
       GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
       sprites[game_over_sprite].init(GameOver, 20, 0, 3, 1.5f);
 
+      GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
+	  GLuint invaderExplosion = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
 
-	  GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
-	  for (int j = 0; j != num_rows; ++j) {
-		  for (int i = 0; i != num_cols; ++i) {
-			  assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
-			  sprites[first_invaderer_sprite + i + j*num_cols].init(
-				  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
-			  );
-		  }
-	  }
+	  GLuint tempInvader = invaderer; 
 
-  /*    GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
+
       for (int j = 0; j != num_rows; ++j) {
         for (int i = 0; i != num_cols; ++i) {
+		
           assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
+		
+		  // Changes the sprite if the invader has been hit 
+		  if (invaderHit[i+j] == true) {
+			  tempInvader = invaderExplosion;
+		  }
+		  else {
+			  tempInvader = invaderer;
+		  }
+
+		  // Draws the sprite that has been selected
           sprites[first_invaderer_sprite + i + j*num_cols].init(
-            invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
+            tempInvader, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
           );
         }
       }
-	  */
+	  
       // set the border to white for clarity
 	  GLuint blue = resource_dict::get_texture_handle(GL_RGB, "#214f99");    //blue
       GLuint white = resource_dict::get_texture_handle(GL_RGB, "#fff200");  //yellow
