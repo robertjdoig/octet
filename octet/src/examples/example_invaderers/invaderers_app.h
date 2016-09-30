@@ -144,21 +144,24 @@ namespace octet {
     // shader to draw a textured triangle
     texture_shader texture_shader_;
 
-    enum {
-      num_sound_sources = 8,
-      num_rows = 5,
-      num_cols = 10,
-      num_missiles = 2,
-      num_bombs = 2,
-      num_borders = 4,
-      num_invaderers = num_rows * num_cols,
+	enum {
+		num_sound_sources = 8,
+		num_rows = 5,
+		num_cols = 10,
+		num_missiles = 2,
+		num_bombs = 2,
+		num_borders = 4,
+		num_invaderers = num_rows * num_cols,
 
-      // sprite definitions
-      ship_sprite = 0,
-      game_over_sprite,
+		// sprite definitions
+		ship_sprite = 0,
+		game_over_sprite,
 
-      first_invaderer_sprite,
-      last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
+		first_invaderer_sprite,
+		last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
+
+		first_explosion_sprite,
+		last_explosion_sprite = first_explosion_sprite + num_invaderers - 1,
 
       first_missile_sprite,
       last_missile_sprite = first_missile_sprite + num_missiles - 1,
@@ -430,8 +433,18 @@ namespace octet {
       GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
       sprites[game_over_sprite].init(GameOver, 20, 0, 3, 1.5f);
 
-      GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
-	  invaderer = resource_dict::get_texture_handle(GL_RGBA, "#fff20080");
+
+	  GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
+	  for (int j = 0; j != num_rows; ++j) {
+		  for (int i = 0; i != num_cols; ++i) {
+			  assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
+			  sprites[first_invaderer_sprite + i + j*num_cols].init(
+				  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
+			  );
+		  }
+	  }
+
+  /*    GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
       for (int j = 0; j != num_rows; ++j) {
         for (int i = 0; i != num_cols; ++i) {
           assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
@@ -440,7 +453,7 @@ namespace octet {
           );
         }
       }
-
+	  */
       // set the border to white for clarity
 	  GLuint blue = resource_dict::get_texture_handle(GL_RGB, "#214f99");    //blue
       GLuint white = resource_dict::get_texture_handle(GL_RGB, "#fff200");  //yellow
@@ -484,6 +497,7 @@ namespace octet {
 
     // called every frame to move things
     void simulate() {
+
       if (game_over) {
         return;
       }
