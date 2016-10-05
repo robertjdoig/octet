@@ -35,16 +35,14 @@ namespace octet {
      //app_scene->add_shape(mat, new mesh_sphere(vec3(1, 1, 1), 1), red, true);
 
 	 drawSphere(mat, ballPos, vec3(1,1,1),0.5f, vec4(1, 1, 0, 1), true);
-	 ballPos = ballPos + vec3(10,0,0);
 
-	  drawBox(mat, vec3(-3, -5, 0), vec3(0.5, 2, 0.5), vec4(0, 1, 0, 1), true);
 
-	  drawBox(mat, vec3(3, -5, 0), vec3(0.5, 2, 0.5), vec4(0, 1, 0, 1), true);
-
-	  drawBox(mat, vec3(0, -3, 0), vec3(4, 0.5, 0.5), vec4(0, 1, 0, 1), true);
-
-      // ground
-	  drawBox(mat, vec3(0,-7,0), vec3(200,1,50), vec4(0.2f, 1, 0.2f, 1), false);
+	 //draw bridge
+	 drawBridge(mat, vec3(0, 5, 0), 45, 0, 0, 1, vec3(12, 0.1, 5), vec4(0.2f, 1, 0.2f, 1), false);
+	 
+	 // ground
+	 drawBox(mat, vec3(-10,-7,0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //left
+	 drawBox(mat, vec3(10,-7,0), vec3(3,1,50), vec4(0.2f, 1, 0.2f, 1), false); //right
 
     }
 
@@ -60,13 +58,22 @@ namespace octet {
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
 		app_scene->add_shape(_mat, new mesh_sphere(_size, _radius),locMat, isMovable);
-		
 	}
 
+	void drawBridge(mat4t _mat, vec3 _pos,float _rotAngle, float _rotPointX,float _rotPointY,float _rotPointZ, vec3 _size, vec4 _col, bool isMovable) {
+		_mat.loadIdentity();
+		_mat.translate(_pos);
+		_mat.rotate(_rotAngle, _rotPointX, _rotPointY, _rotPointZ);
+		
+		material *locMat = new material(_col);
+		app_scene->add_shape(_mat, new mesh_box(_size), locMat, isMovable);
+
+	}
 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
-      int vx = 0, vy = 0;
+		
+		int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
 
