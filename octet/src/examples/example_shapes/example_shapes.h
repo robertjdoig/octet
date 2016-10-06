@@ -19,6 +19,8 @@ namespace octet {
 
 	vec3 ballPos =  vec3(-10, -5, 0);
 
+	float rotAngle = 45;
+
     /// this is called once OpenGL is initialized
     void app_init() {
       app_scene =  new visual_scene();
@@ -31,14 +33,27 @@ namespace octet {
 	  material *black = new material(vec4(0, 0, 0, 1));
 
      mat4t mat;
-     //mat.translate(ballPos);
-     //app_scene->add_shape(mat, new mesh_sphere(vec3(1, 1, 1), 1), red, true);
+    // mat.translate(ballPos);
+    // app_scene->add_shape(mat, new mesh_sphere(vec3(1, 1, 1), 1), red, true);
 
 	 drawSphere(mat, ballPos, vec3(1,1,1),0.5f, vec4(1, 1, 0, 1), true);
 
 
+	// for (int i = 0; i < 10; i++) {
+		// drawCylinder(mat, vec3(-10, -7, 0), vec3(3, 1, 4), vec4(0.2f, 1, 0.2f, 1), false);
+	// }
+
+
+		 mat.loadIdentity();
+		
+		 mat.translate(-10, 0, 0);
+		 for (int i = 0; i < 10; i++) {
+			 mat.translate(vec3(i/2, 0, 0));
+			 app_scene->add_shape(mat, new mesh_cylinder(vec3(1, 1, 1), 1), red, false);
+		 }
+
 	 //draw bridge
-	 drawBridge(mat, vec3(0, 5, 0), 45, 0, 0, 1, vec3(12, 0.1, 5), vec4(0.2f, 1, 0.2f, 1), false);
+	 drawBridge(mat, vec3(0, 5, 0), rotAngle, 0, 0, 1, vec3(12, 0.1, 5), vec4(0.2f, 1, 0.2f, 1), false);
 	 
 	 // ground
 	 drawBox(mat, vec3(-10,-7,0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //left
@@ -51,6 +66,8 @@ namespace octet {
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
 		app_scene->add_shape(_mat, new mesh_box(_size),locMat , isMovable);
+		//app_scene->apply_central_force(_pos);
+	
 	}
 
 	void drawSphere(mat4t _mat, vec3 _pos, vec3 _size,float _radius, vec4 _col, bool isMovable) {
@@ -70,9 +87,18 @@ namespace octet {
 
 	}
 
-    /// this is called to draw the world
+	void drawCylinder(mat4t _mat, vec3 _pos, vec3 _size, vec4 _col, bool isMovable) {
+		_mat.loadIdentity();
+		_mat.translate(_pos);
+
+		material *locMat = new material(_col);
+		app_scene->add_shape(_mat, new mesh_cylinder(_size,15), locMat, isMovable);
+
+	}
+
+    // this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
-		
+	
 		int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);
