@@ -17,8 +17,6 @@ namespace octet {
     ~example_shapes() {
     }
 
-	vec3 ballPos =  vec3(-10, -5, 0);
-
 	float rotAngle = 45;
 
     /// this is called once OpenGL is initialized
@@ -36,7 +34,7 @@ namespace octet {
     // mat.translate(ballPos);
     // app_scene->add_shape(mat, new mesh_sphere(vec3(1, 1, 1), 1), red, true);
 
-	 drawSphere(mat, ballPos, vec3(1,1,1),0.5f, vec4(1, 1, 0, 1), true);
+	 drawSphere(mat, vec3(-10,0,0), vec3(1,1,1),0.5f, vec4(1, 1, 0, 1), true);
 
 
 	// for (int i = 0; i < 10; i++) {
@@ -50,6 +48,7 @@ namespace octet {
 		 for (int i = 0; i < 10; i++) {
 			 mat.translate(vec3(i/2, 0, 0));
 			 app_scene->add_shape(mat, new mesh_cylinder(vec3(1, 1, 1), 1), red, false);
+			
 		 }
 
 	 //draw bridge
