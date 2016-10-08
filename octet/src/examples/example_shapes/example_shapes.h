@@ -18,6 +18,7 @@ namespace octet {
     }
 
 	float rotAngle = 45;
+  btVector3 ballForce = btVector3(100,1,1); 
 
     /// this is called once OpenGL is initialized
     void app_init() {
@@ -47,7 +48,7 @@ namespace octet {
 		 mat.translate(-10, 0, 0);
 		 for (int i = 0; i < 10; i++) {
 			 mat.translate(vec3(i/2, 0, 0));
-			 app_scene->add_shape(mat, new mesh_cylinder(vec3(1, 1, 1), 1), red, false);
+			// app_scene->add_shape(mat, new mesh_cylinder(vec3(1, 1, 1), 1), red, false);
 			
 		 }
 
@@ -58,22 +59,22 @@ namespace octet {
 	 drawBox(mat, vec3(-10,-7,0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //left
 	 drawBox(mat, vec3(10,-7,0), vec3(3,1,50), vec4(0.2f, 1, 0.2f, 1), false); //right
 
+   drawBox(mat, vec3(10, -8, 0), vec3(50, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //right
+
     }
 
 	void drawBox(mat4t _mat, vec3 _pos, vec3 _size, vec4 _col, bool isMovable) {
 		_mat.loadIdentity();
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_box(_size),locMat , isMovable);
-		//app_scene->apply_central_force(_pos);
-	
+		app_scene->add_shape(_mat, new mesh_box(_size),locMat ,btVector3(1,0,0),btVector3(0,0,0), isMovable);
 	}
 
 	void drawSphere(mat4t _mat, vec3 _pos, vec3 _size,float _radius, vec4 _col, bool isMovable) {
 		_mat.loadIdentity();
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_sphere(_size, _radius),locMat, isMovable);
+		app_scene->add_shape(_mat, new mesh_sphere(_size, _radius),locMat, ballForce, btVector3(0, 0, 0), isMovable);
 	}
 
 	void drawBridge(mat4t _mat, vec3 _pos,float _rotAngle, float _rotPointX,float _rotPointY,float _rotPointZ, vec3 _size, vec4 _col, bool isMovable) {
@@ -82,7 +83,7 @@ namespace octet {
 		_mat.rotate(_rotAngle, _rotPointX, _rotPointY, _rotPointZ);
 		
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_box(_size), locMat, isMovable);
+		//app_scene->add_shape(_mat, new mesh_box(_size), locMat, isMovable);
 
 	}
 
@@ -91,13 +92,24 @@ namespace octet {
 		_mat.translate(_pos);
 
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_cylinder(_size,15), locMat, isMovable);
+		//app_scene->add_shape(_mat, new mesh_cylinder(_size,15), locMat, isMovable);
 
 	}
 
+  void move_Ball() {
+    // left and right arrows
+    if (is_key_down(key_left)) {
+      ballForce += btVector3(-100, 0, 0);
+    }
+    else if (is_key_down(key_right)) {
+      ballForce += btVector3(+100, 0, 0);
+    }
+  }
+
     // this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
-	
+      move_Ball();
+
 		int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
       app_scene->begin_render(vx, vy);

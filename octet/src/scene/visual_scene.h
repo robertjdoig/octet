@@ -297,7 +297,7 @@ namespace octet { namespace scene {
     }
 
     /// helper to add a mesh to a scene and also to create the corresponding physics object
-    mesh_instance *add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic=false, float mass=1, collison_shape_t *shape=NULL) {
+    mesh_instance *add_shape(mat4t_in mat, mesh *msh, material *mtl, btVector3 force, btVector3 relPos, bool is_dynamic=false, float mass=1, collison_shape_t *shape=NULL) {
       scene_node *node = new scene_node(this);
       node->access_nodeToParent() = mat;
 
@@ -328,6 +328,8 @@ namespace octet { namespace scene {
           btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
           world->addRigidBody(rigid_body);
           rigid_body->setUserPointer(node);
+          rigid_body->applyForce(force, relPos); //adds a force to the physics object
+          //rigid_body->applyCentralForce(force);
           node->set_rigid_body(rigid_body);
         }
       #endif
