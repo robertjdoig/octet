@@ -67,14 +67,14 @@ namespace octet {
 		_mat.loadIdentity();
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_box(_size),locMat ,btVector3(1,0,0),btVector3(0,0,0), isMovable);
+		app_scene->add_shape(_mat, new mesh_box(_size),locMat , isMovable);
 	}
 
 	void drawSphere(mat4t _mat, vec3 _pos, vec3 _size,float _radius, vec4 _col, bool isMovable) {
 		_mat.loadIdentity();
 		_mat.translate(_pos);
 		material *locMat = new material(_col);
-		app_scene->add_shape(_mat, new mesh_sphere(_size, _radius),locMat, ballForce, btVector3(0, 0, 0), isMovable);
+		app_scene->add_forceShape(_mat, new mesh_sphere(_size, _radius),locMat, ballForce, btVector3(0, 0, 0), isMovable);
 	}
 
 	void drawBridge(mat4t _mat, vec3 _pos,float _rotAngle, float _rotPointX,float _rotPointY,float _rotPointZ, vec3 _size, vec4 _col, bool isMovable) {
