@@ -333,7 +333,7 @@ namespace octet { namespace scene {
       #endif
       return result;
     }
-
+    /*
     /// helper to add a mesh to a scene and also to create the corresponding physics object
     mesh_instance *add_forceShape(mat4t_in mat, mesh *msh, material *mtl, btVector3 force, btVector3 relPos, bool is_dynamic = false, float mass = 1, collison_shape_t *shape = NULL) {
       scene_node *node = new scene_node(this);
@@ -373,7 +373,7 @@ namespace octet { namespace scene {
 #endif
       return result;
     }
-
+    */
 
     /// Serialization
     void visit(visitor &v) {
