@@ -15,6 +15,8 @@ namespace octet {
     example_triangle(int argc, char **argv) : app(argc, argv) {
     }
 
+    float branch_len = 0.2f;
+
     /// this is called once OpenGL is initialized
     void app_init() {
       shader = new color_shader();
@@ -33,6 +35,16 @@ namespace octet {
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
 
       */
+    }
+
+    void branch(float _len) {
+
+
+      draw_Quad(0.0f, -1.0f, 0.1f,_len);
+
+
+
+
     }
 
     void draw_Quad(float _x, float _y, float _halve_width, float _halve_height ) {
@@ -87,7 +99,7 @@ namespace octet {
       vec4 emissive_color(1, 1, 0, 1);
       shader->render(modelToProjection, emissive_color);
 
-      draw_Quad(0.0f,-1.0f,0.1f,0.4f);
+      branch(branch_len);
 
 
       /*
