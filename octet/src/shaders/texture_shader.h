@@ -16,7 +16,7 @@ namespace octet { namespace shaders {
     // index for texture sampler
     GLuint samplerIndex_;
   public:
-    void init(vec2 test) {
+    void init() {
       // this is the vertex shader.
       // it is called for each corner of each triangle
       // it inputs pos and uv from each corner
