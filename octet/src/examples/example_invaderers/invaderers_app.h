@@ -17,6 +17,11 @@
 //   Audio
 //
 
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <sstream>
+
 namespace octet {
   class sprite {
     // where is our sprite (overkill for a 2D game!)
@@ -82,10 +87,11 @@ namespace octet {
     
       // this is an array of the positions of the corners of the texture in 2D
       static const float uvs[] = {
-         0,  0,
-         1,  0,
+        0,  0,
+        1,  0,
          1,  1,
          0,  1,
+       
       };
 
       // attribute_uv is position in the texture of each corner
@@ -210,7 +216,32 @@ namespace octet {
     // information for our text
     bitmap_font font;
 
-    ALuint get_sound_source() { return sources[cur_source++ % num_sound_sources]; }
+    ALuint get_sound_source() { return sources[cur_source++ % num_sound_sources]; 
+    }
+
+
+
+    char read_file(int arrayPos) {
+     
+      std::ifstream myfile("pos.txt");
+     
+      
+      char chars[num_invaderers];
+      myfile.get(chars, num_invaderers);
+      std::cout << chars ;
+
+      /*
+      if (myfile.is_open()) {
+        while (getline(myfile, line)) {
+          text += line;
+          std::cout << text << '\n';
+        }
+        */
+      
+      return   chars[arrayPos];
+    }
+
+
 
     // called when we hit an enemy
     void on_hit_invaderer() {
@@ -253,6 +284,18 @@ namespace octet {
         sprites[ship_sprite].translate(+ship_speed, 0);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite+3])) {
           sprites[ship_sprite].translate(-ship_speed, 0);
+        }
+      }
+      if (is_key_down(key_up)) {
+        sprites[ship_sprite].translate(0,-ship_speed);
+        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
+          sprites[ship_sprite].translate(0,+ship_speed);
+        }
+      }
+      else if (is_key_down(key_right)) {
+        sprites[ship_sprite].translate(0,+ship_speed);
+        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
+          sprites[ship_sprite].translate(0,-ship_speed);
         }
       }
     }
@@ -438,26 +481,31 @@ namespace octet {
       GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
 	  GLuint invaderExplosion = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
 
-	  GLuint tempInvader = invaderer; 
-
-
       for (int j = 0; j != num_rows; ++j) {
         for (int i = 0; i != num_cols; ++i) {
-		
-          assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
-		
-		  // Changes the sprite if the invader has been hit 
-		  if (invaderHit[i+j] == true) {
-			  tempInvader = invaderExplosion;
-		  }
-		  else {
-			  tempInvader = invaderer;
-		  }
 
-		  // Draws the sprite that has been selected
-          sprites[first_invaderer_sprite + i + j*num_cols].init(
-            tempInvader, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f
-          );
+          assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
+
+         // sprites[first_invaderer_sprite + i + j*num_cols].init(
+          //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
+
+          // Draws the sprite that has been selected
+          
+         switch (read_file(i + j*num_cols)) {
+          case '.':
+            //set inactivez
+            sprites[first_invaderer_sprite + i + j*num_cols].is_enabled() = false;
+
+            break;
+          case 'x': 
+              //draw invader
+            sprites[first_invaderer_sprite + i + j*num_cols].init(
+              invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
+            break;
+          default: 
+            std::cout << "not reading the lvl file";
+          }
+                
         }
       }
 	  
@@ -520,6 +568,8 @@ namespace octet {
       move_bombs();
 
       move_invaders(invader_velocity, 0);
+
+      read_file(1);
 
       sprite &border = sprites[first_border_sprite+(invader_velocity < 0 ? 2 : 3)];
       if (invaders_collide(border)) {
