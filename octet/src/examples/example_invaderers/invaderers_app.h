@@ -228,13 +228,7 @@ namespace octet {
       
       char chars[num_invaderers];
       myfile.get(chars, num_invaderers);
-      
-      std::string tempString;
-      while (std::getline(myfile, tempString) ){
-        
-      }  
-      
-      
+       
       std::cout << chars;
      
       return   chars[arrayPos];
