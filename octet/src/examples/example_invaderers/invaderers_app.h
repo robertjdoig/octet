@@ -230,7 +230,7 @@ namespace octet {
 
     char read_file(int arrayPos) {
 
-
+      //*
       //http://stackoverflow.com/questions/13035674/how-to-read-line-by-line-or-a-whole-text-file-at-once
       std::ifstream myfile("pos.txt");
       std::string text; 
@@ -244,8 +244,13 @@ namespace octet {
       // http://www.cplusplus.com/forum/general/100714/ 
       char *chars = new char[com_line.length() + 1];
       std::strcpy(chars, com_line.c_str());
-      std::cout << chars;
+      //std::cout << chars;
+      /*/
 
+      std::ifstream myfile("pos.txt");
+      char chars[num_invaderers+1];
+      myfile.get(chars, num_invaderers+1);
+      */
       return   chars[arrayPos];
     }
 
@@ -518,7 +523,7 @@ namespace octet {
            //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
 
            // Draws the sprite that has been selected
-          float tile_size = 0.4f; 
+          float tile_size = 0.25f; 
           float x = ((float)i - num_cols * 0.5f) * tile_size;
           float y = 2.50f - ((float)j * tile_size);
 
