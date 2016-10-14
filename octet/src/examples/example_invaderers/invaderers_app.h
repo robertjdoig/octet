@@ -487,6 +487,9 @@ namespace octet {
       sprites[game_over_sprite].init(GameOver, 20, 0, 0, 3, 1.5f);
 
       GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
+      GLuint brick = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/brick_sprite.gif");
+      GLuint path = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/sand_sprite.gif");
+
       GLuint invaderExplosion = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
 
       for (int j = 0; j != num_rows; j++) {
@@ -498,15 +501,13 @@ namespace octet {
            //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
 
            // Draws the sprite that has been selected
-          GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  //yellow
-
           float x = ((float)i - num_cols * 0.5f) * 0.25f;
           float y = 2.50f - ((float)j * 0.25f);
 
           switch (read_file(i + j*num_cols)) {
           case '.':
             //Draw Path
-            sprites[first_invaderer_sprite + i + j*num_cols].is_enabled() = false;
+            sprites[first_invaderer_sprite + i + j*num_cols].init(path, x, y, 0.0f, 0.25f, 0.25f);
 
             break;
           case 'x':
@@ -516,10 +517,10 @@ namespace octet {
             break;
           case 'b':
             //draw block 
-            sprites[first_invaderer_sprite + i + j*num_cols].init(white, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_invaderer_sprite + i + j*num_cols].init(brick, x, y, 0.0f, 0.25f, 0.25f);
             break;
-          //default:
-          //  std::cout << "not reading the level file";
+          default:
+            std::cout << "not reading the level file";
           }
 
         }
