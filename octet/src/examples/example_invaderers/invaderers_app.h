@@ -158,14 +158,20 @@ namespace octet {
       num_invaderers = num_rows * num_cols,
 
       // sprite definitions
-      ship_sprite = 0,
-      game_over_sprite,
+      
+      game_over_sprite = 0,
 
       first_invaderer_sprite,
       last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
 
       first_explosion_sprite,
       last_explosion_sprite = first_explosion_sprite + num_invaderers - 1,
+
+      first_path_sprite,
+      last_path_sprite = first_path_sprite + num_invaderers - 1,
+
+      first_block_sprite,
+      last_block_sprite = first_block_sprite + num_invaderers - 1,
 
       first_missile_sprite,
       last_missile_sprite = first_missile_sprite + num_missiles - 1,
@@ -175,6 +181,8 @@ namespace octet {
 
       first_border_sprite,
       last_border_sprite = first_border_sprite + num_borders - 1,
+
+      ship_sprite,
 
       num_sprites,
     };
@@ -507,7 +515,7 @@ namespace octet {
           switch (read_file(i + j*num_cols)) {
           case '.':
             //Draw Path
-            sprites[first_invaderer_sprite + i + j*num_cols].init(path, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, 0.25f, 0.25f);
 
             break;
           case 'x':
@@ -517,22 +525,21 @@ namespace octet {
             break;
           case 'b':
             //draw block 
-            sprites[first_invaderer_sprite + i + j*num_cols].init(brick, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, 0.25f, 0.25f);
             break;
           default:
             std::cout << "not reading the level file";
           }
-
         }
       }
-      /*
+      
       // set the border to white for clarity
       GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  //yellow
       sprites[first_border_sprite + 0].init(white, 0, -3, 0, 6, 0.2f);
       sprites[first_border_sprite + 1].init(white, 0, 3, 0, 6, 0.2f);
       sprites[first_border_sprite + 2].init(white, -3, 0, 0, 0.2f, 6);
       sprites[first_border_sprite + 3].init(white, 3, 0, 0, 0.2f, 6);
-      */
+      
 
       // use the missile texture
       GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/missile.gif");
