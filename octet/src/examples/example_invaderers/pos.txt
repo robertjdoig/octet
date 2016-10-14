@@ -1,1 +1,10 @@
-bbbbbbbbbbb...x..x.bb.bxb.b.bbb.b.b.b..bb...x..x.bb.bxb.b.bbb.b.b.b..bb...x..x.bb.bxb.b.bbbbbbbbbbbb
+bbbbbbbbbb
+b...x..x.b
+b.bxb.b.bb
+b.b.b.b..b
+b...x..x.b
+b.bxb.b.bb
+b.b.b.b..b
+b...x..x.b
+b.bxb.b.bb
+bbbbbbbbbb

@@ -20,6 +20,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sstream>
 
 namespace octet {
@@ -229,12 +230,20 @@ namespace octet {
 
     char read_file(int arrayPos) {
 
+
+      //http://stackoverflow.com/questions/13035674/how-to-read-line-by-line-or-a-whole-text-file-at-once
       std::ifstream myfile("pos.txt");
+      std::string text; 
+      std::string com_line;
+      while (std::getline(myfile, text))
+      {
+        com_line += text;
+      }
 
 
-      char chars[num_invaderers];
-      myfile.get(chars, num_invaderers);
-
+      // http://www.cplusplus.com/forum/general/100714/ 
+      char *chars = new char[com_line.length() + 1];
+      std::strcpy(chars, com_line.c_str());
       std::cout << chars;
 
       return   chars[arrayPos];
@@ -509,23 +518,24 @@ namespace octet {
            //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
 
            // Draws the sprite that has been selected
-          float x = ((float)i - num_cols * 0.5f) * 0.25f;
-          float y = 2.50f - ((float)j * 0.25f);
+          float tile_size = 0.4f; 
+          float x = ((float)i - num_cols * 0.5f) * tile_size;
+          float y = 2.50f - ((float)j * tile_size);
 
           switch (read_file(i + j*num_cols)) {
           case '.':
             //Draw Path
-            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size);
 
             break;
           case 'x':
             //draw invader
-            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size);
             //invaderer, ((float)i - num_cols * 0.01f) * 0.5f, 0.0f, 3.0f - ((float)j * 0.25f), 0.1f, 0.1f);
             break;
           case 'b':
             //draw block 
-            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, 0.25f, 0.25f);
+            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, tile_size, tile_size);
             break;
           default:
             std::cout << "not reading the level file";
