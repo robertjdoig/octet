@@ -140,6 +140,7 @@ namespace octet {
   };
 
   class invaderers_app : public octet::app {
+       
     // Matrix to transform points in our camera space to the world.
     // This lets us move our camera
     mat4t cameraToWorld;
@@ -149,7 +150,7 @@ namespace octet {
 
     enum {
       num_sound_sources = 8,
-      num_rows = 5,
+      num_rows = 10,
       num_cols = 10,
       num_missiles = 2,
       num_bombs = 2,
@@ -469,6 +470,7 @@ namespace octet {
 
     // this is called once OpenGL is initialized
     void app_init() {
+
       // set up the shader
       texture_shader_.init();
 
@@ -487,45 +489,53 @@ namespace octet {
       GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
       GLuint invaderExplosion = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/InvadersExplosion.gif");
 
-      for (int j = 0; j != num_rows; ++j) {
-        for (int i = 0; i != num_cols; ++i) {
+      for (int j = 0; j != num_rows; j++) {
+        for (int i = 0; i != num_cols; i++) {
 
-          assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
+          //assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
 
           // sprites[first_invaderer_sprite + i + j*num_cols].init(
            //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
 
            // Draws the sprite that has been selected
+          GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  //yellow
+
+          float x = ((float)i - num_cols * 0.5f) * 0.25f;
+          float y = 2.50f - ((float)j * 0.25f);
 
           switch (read_file(i + j*num_cols)) {
           case '.':
-            //set inactive
+            //Draw Path
             sprites[first_invaderer_sprite + i + j*num_cols].is_enabled() = false;
 
             break;
           case 'x':
             //draw invader
-            sprites[first_invaderer_sprite + i + j*num_cols].init(
-              invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0, 0.25f, 0.25f);
+            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, 0.25f, 0.25f);
+            //invaderer, ((float)i - num_cols * 0.01f) * 0.5f, 0.0f, 3.0f - ((float)j * 0.25f), 0.1f, 0.1f);
             break;
-          default:
-            std::cout << "not reading the lvl file";
+          case 'b':
+            //draw block 
+            sprites[first_invaderer_sprite + i + j*num_cols].init(white, x, y, 0.0f, 0.25f, 0.25f);
+            break;
+          //default:
+          //  std::cout << "not reading the level file";
           }
 
         }
       }
-
+      /*
       // set the border to white for clarity
-      GLuint blue = resource_dict::get_texture_handle(GL_RGB, "#214f99");    //blue
       GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  //yellow
-      sprites[first_border_sprite + 0].init(blue, 0, -3, 0, 6, 0.2f);
+      sprites[first_border_sprite + 0].init(white, 0, -3, 0, 6, 0.2f);
       sprites[first_border_sprite + 1].init(white, 0, 3, 0, 6, 0.2f);
       sprites[first_border_sprite + 2].init(white, -3, 0, 0, 0.2f, 6);
       sprites[first_border_sprite + 3].init(white, 3, 0, 0, 0.2f, 6);
+      */
 
       // use the missile texture
       GLuint missile = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/missile.gif");
-      missile = resource_dict::get_texture_handle(GL_RGBA, "#fff200");
+      //missile = resource_dict::get_texture_handle(GL_RGBA, "#fff200");
       for (int i = 0; i != num_missiles; ++i) {
         // create missiles off-screen
         sprites[first_missile_sprite + i].init(missile, 20, 0, 0, 0.0625f, 0.25f);
@@ -567,15 +577,14 @@ namespace octet {
 
       fire_missiles();
 
-      fire_bombs();
+     // fire_bombs();
 
       move_missiles();
 
-      move_bombs();
+     // move_bombs();
 
-      move_invaders(invader_velocity, 0, 0);
+     // move_invaders(invader_velocity, 0, 0);
 
-      read_file(1);
 
       sprite &border = sprites[first_border_sprite + (invader_velocity < 0 ? 2 : 3)];
       if (invaders_collide(border)) {
