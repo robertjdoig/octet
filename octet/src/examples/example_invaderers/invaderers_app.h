@@ -151,7 +151,7 @@ namespace octet {
 
     enum {
       num_sound_sources = 8,
-      num_rows = 5,
+      num_rows = 20,
       num_cols = 20,
       num_missiles = 2,
       num_bombs = 2,
@@ -254,6 +254,7 @@ namespace octet {
       return   chars[arrayPos];
      // delete [] chars; 
     }
+
 
 
 
