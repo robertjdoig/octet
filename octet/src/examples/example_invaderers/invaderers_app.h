@@ -151,8 +151,8 @@ namespace octet {
 
     enum {
       num_sound_sources = 8,
-      num_rows = 10,
-      num_cols = 10,
+      num_rows = 5,
+      num_cols = 20,
       num_missiles = 2,
       num_bombs = 2,
       num_borders = 4,
@@ -242,7 +242,7 @@ namespace octet {
 
 
       // http://www.cplusplus.com/forum/general/100714/ 
-      char *chars = new char[com_line.length() + 1];
+      char *chars = new char[com_line.length()];
       std::strcpy(chars, com_line.c_str());
       //std::cout << chars;
       /*/
@@ -250,8 +250,9 @@ namespace octet {
       std::ifstream myfile("pos.txt");
       char chars[num_invaderers+1];
       myfile.get(chars, num_invaderers+1);
-      */
+      //*/
       return   chars[arrayPos];
+     // delete [] chars; 
     }
 
 
@@ -313,12 +314,14 @@ namespace octet {
           sprites[ship_sprite].translate(0, -ship_speed, 0);
         }
       }
+      //'s' key
       if (is_key_down(0x57)) {
         sprites[ship_sprite].translate(0, 0, -ship_speed);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
           sprites[ship_sprite].translate(0, 0, +ship_speed);
         }
       }
+      //'w' key
       else if (is_key_down(0x53)) {
         sprites[ship_sprite].translate(0, 0, +ship_speed);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
@@ -503,6 +506,8 @@ namespace octet {
       font_texture = resource_dict::get_texture_handle(GL_RGBA, "assets/big_0.gif");
 
       GLuint ship = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/ship.gif");
+
+
       sprites[ship_sprite].init(ship, 0, -2.75f, 0, 0.25f, 0.25f);
 
       GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
