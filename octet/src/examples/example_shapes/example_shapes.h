@@ -32,9 +32,9 @@ namespace octet {
       material *black = new material(vec4(0, 0, 0, 1));
 
       mat4t mat;
-
-      drawSphere(mat, vec3(-10, 0, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
-
+      mat4t ballMatrix;
+      drawSphere(ballMatrix, vec3(-10, 0, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
+      
       for (int i = 0; i < 7; i++) {
         drawBox(mat, vec3(-8+(i*2), 0, 0), vec3(0.8f,0.1f,10), vec4(0.2f, 1, 0.2f, 1), false); //right
       }
@@ -62,13 +62,14 @@ namespace octet {
       _mat.translate(_pos);
       material *locMat = new material(_col);
      // app_scene->add_forceShape(_mat, new mesh_sphere(_size, _radius), locMat, ballForce, btVector3(0, 0, 0), isMovable);
+     app_scene->add_shape(_mat, new mesh_sphere(_size, _radius), locMat, isMovable);
+    
     }
 
     void drawBridge(mat4t _mat, vec3 _pos, float _rotAngle, float _rotPointX, float _rotPointY, float _rotPointZ, vec3 _size, vec4 _col, bool isMovable) {
       _mat.loadIdentity();
       _mat.translate(_pos);
       _mat.rotate(_rotAngle, _rotPointX, _rotPointY, _rotPointZ);
-
       material *locMat = new material(_col);
       //app_scene->add_shape(_mat, new mesh_box(_size), locMat, isMovable);
 
