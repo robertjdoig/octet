@@ -128,6 +128,24 @@ namespace octet {
         (fabsf(dy) < halfHeight + rhs.halfHeight);
     }
 
+    bool collides_with_x(const sprite &rhs) const {
+      float dx = rhs.modelToWorld[3][0] - modelToWorld[3][0];
+
+      // both distances have to be under the sum of the halfwidths
+      // for a collision
+      return
+        (fabsf(dx) < halfWidth + rhs.halfWidth);
+    }
+
+    bool collides_with_y(const sprite &rhs) const {
+      float dy = rhs.modelToWorld[3][1] - modelToWorld[3][1];
+
+      // both distances have to be under the sum of the halfwidths
+      // for a collision
+      return
+        (fabsf(dy) < halfHeight + rhs.halfHeight);
+    }
+
     bool is_above(const sprite &rhs, float margin) const {
       float dx = rhs.modelToWorld[3][0] - modelToWorld[3][0];
 
@@ -156,6 +174,7 @@ namespace octet {
       num_missiles = 2,
       num_bombs = 2,
       num_borders = 4,
+      num_blocks = num_rows * num_cols,
       num_invaderers = num_rows * num_cols,
 
       // sprite definitions
@@ -172,7 +191,7 @@ namespace octet {
       last_path_sprite = first_path_sprite + num_invaderers - 1,
 
       first_block_sprite,
-      last_block_sprite = first_block_sprite + num_invaderers - 1,
+      last_block_sprite = first_block_sprite + num_blocks - 1,
 
       first_missile_sprite,
       last_missile_sprite = first_missile_sprite + num_missiles - 1,
@@ -203,6 +222,9 @@ namespace octet {
 
     // speed of enemy
     float invader_velocity;
+
+    //speed of ship
+    float ship_velocity = 0.05f;
 
     // sounds
     ALuint whoosh;
@@ -239,7 +261,6 @@ namespace octet {
       {
         com_line += text;
       }
-
 
       // http://www.cplusplus.com/forum/general/100714/ 
       char *chars = new char[com_line.length()];
@@ -288,49 +309,70 @@ namespace octet {
     }
 
     // use the keyboard to move the ship
-    void move_ship() {
-      const float ship_speed = 0.05f;
+    void move_ship(float _ship_velocity) {
+      const float ship_speed = 1.0f;
       // left and right arrows
       if (is_key_down(key_left)) {
-        sprites[ship_sprite].translate(-ship_speed, 0, 0);
+        sprites[ship_sprite].translate(-ship_speed * _ship_velocity, 0, 0);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
-          sprites[ship_sprite].translate(+ship_speed, 0, 0);
+          sprites[ship_sprite].translate(+ship_speed * _ship_velocity, 0, 0);
         }
       }
       else if (is_key_down(key_right)) {
-        sprites[ship_sprite].translate(+ship_speed, 0, 0);
+        sprites[ship_sprite].translate(+_ship_velocity, 0, 0);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
-          sprites[ship_sprite].translate(-ship_speed, 0, 0);
+          sprites[ship_sprite].translate(-_ship_velocity, 0, 0);
         }
       }
       if (is_key_down(key_down)) {
-        sprites[ship_sprite].translate(0, -ship_speed, 0);
-        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
-          sprites[ship_sprite].translate(0, +ship_speed, 0);
-        }
+        sprites[ship_sprite].translate(0, -_ship_velocity, 0);
+       // if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 4])) {
+       //   sprites[ship_sprite].translate(0, +_ship_velocity, 0);
+       // }
       }
       else if (is_key_down(key_up)) {
-        sprites[ship_sprite].translate(0, +ship_speed, 0);
-        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
-          sprites[ship_sprite].translate(0, -ship_speed, 0);
-        }
+        sprites[ship_sprite].translate(0, +_ship_velocity, 0);
+       // if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 5])) {
+       //   sprites[ship_sprite].translate(0, -_ship_velocity, 0);
+       // }
       }
+  
       //'s' key
       if (is_key_down(0x57)) {
-        sprites[ship_sprite].translate(0, 0, -ship_speed);
+        sprites[ship_sprite].translate(0, 0, -_ship_velocity);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
-          sprites[ship_sprite].translate(0, 0, +ship_speed);
+          sprites[ship_sprite].translate(0, 0, +_ship_velocity);
         }
       }
       //'w' key
       else if (is_key_down(0x53)) {
-        sprites[ship_sprite].translate(0, 0, +ship_speed);
+        sprites[ship_sprite].translate(0, 0, +_ship_velocity);
         if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
-          sprites[ship_sprite].translate(0, 0, -ship_speed);
+          sprites[ship_sprite].translate(0, 0, -_ship_velocity);
         }
       }
     }
+    
+      bool ship_collide_x(sprite &ship) {
+      for (int j = 0; j != num_blocks; ++j) {
+        sprite &block = sprites[first_block_sprite + j];
+        if (block.collides_with_x(ship)) {
+          return true;
+        }
+      }
+      return false;
+    }
 
+      bool ship_collide_y(sprite &ship) {
+        for (int j = 0; j != num_blocks; ++j) {
+          sprite &block = sprites[first_block_sprite + j];
+          if (block.collides_with_y(ship)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    
     // fire button (space)
     void fire_missiles() {
       if (missiles_disabled) {
@@ -455,6 +497,7 @@ namespace octet {
     }
 
 
+
     void draw_text(texture_shader &shader, float x, float y, float scale, const char *text) {
       mat4t modelToWorld;
       modelToWorld.loadIdentity();
@@ -509,7 +552,7 @@ namespace octet {
       GLuint ship = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/ship.gif");
 
 
-      sprites[ship_sprite].init(ship, 0, -2.75f, 0, 0.25f, 0.25f);
+      sprites[ship_sprite].init(ship, 0, -2.75f, 0, 0.15f, 0.15f);
 
       GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
       sprites[game_over_sprite].init(GameOver, 20, 0, 0, 3, 1.5f);
@@ -602,7 +645,7 @@ namespace octet {
         return;
       }
 
-      move_ship();
+      move_ship(ship_velocity);
 
       fire_missiles();
 
@@ -620,6 +663,8 @@ namespace octet {
         invader_velocity = -invader_velocity;
         move_invaders(invader_velocity, -0.1f, 0);
       }
+
+    
     }
 
     // this is called to draw the world
