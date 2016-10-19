@@ -4,6 +4,9 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+
+#include <vector>
+
 namespace octet {
   /// Drawing a triangle without a scene
   class example_triangle : public app {
@@ -16,6 +19,12 @@ namespace octet {
     }
 
     float branch_len = 0.2f;
+
+    std::string axiom = "a";
+
+    //static const float vertex_data[]; 
+    
+    std::vector<float> v_vertex_data;
 
     /// this is called once OpenGL is initialized
     void app_init() {
@@ -35,16 +44,42 @@ namespace octet {
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
 
       */
+
+     
+
+     
+      noIterations(6);
+    }
+
+
+    void rule() {
+
+      std::string tempString; 
+      for (char& c : axiom) {
+        //rule for A
+        if (c == 'a') {
+          tempString += "ab";
+        }
+        //Rule for B
+        else if (c == 'b') {
+          tempString += "a";
+        }
+      }
+      axiom = tempString;
+
+      std::cout << axiom << std::endl;
+
+    }
+
+    void noIterations(int _iterations) {
+      for (int i = 0; i < _iterations; i++)
+      {
+        rule();
+      }
     }
 
     void branch(float _len) {
-
-
       draw_Quad(0.0f, -1.0f, 0.1f,_len);
-
-
-
-
     }
 
     void draw_Quad(float _x, float _y, float _halve_width, float _halve_height ) {
@@ -53,10 +88,10 @@ namespace octet {
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       static const float vertex_data[] = {
-        _x - _halve_width, _y, 0.0f,
-        _x - _halve_width, _y + _halve_height, 0.0f,
-        _x + _halve_width, _y + _halve_height, 0.0f,
         _x + _halve_width, _y, 0.0f,
+        _x - _halve_width, _y, 0.0f,
+        _x + _halve_width, _y + _halve_height, 0.0f,
+        _x - _halve_width, _y + _halve_height, 0.0f,
       };
 
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
@@ -71,13 +106,26 @@ namespace octet {
 
       // draw a triangle
       // glDrawArrays(GL_TRIANGLES, 0, 3);
-      glDrawArrays(GL_QUADS, 0, 4);
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
-
+    void addData(float _x, float _y, float _halve_width, float _halve_height) {
+       const float vertex_data[] = {
+        _x + _halve_width, _y, 0.0f,
+        _x - _halve_width, _y, 0.0f,
+        _x + _halve_width, _y + _halve_height, 0.0f,
+        _x - _halve_width, _y + _halve_height, 0.0f,
+      };
+      
+       for (int i = 0; i < 12; i++) {
+         v_vertex_data.push_back(vertex_data[i]);
+      }
+      
+    }
 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
+
       // the framework gives us the dimensions of the window.
       int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
@@ -99,8 +147,19 @@ namespace octet {
       vec4 emissive_color(1, 1, 0, 1);
       shader->render(modelToProjection, emissive_color);
 
-      branch(branch_len);
+      //branch(branch_len);
 
+      for (char& c : axiom) {
+        if (c == 'a') {
+          branch(branch_len);
+        }
+      }
+          addData(0.0f,0.0f,0.1f,0.1f);
+      std::string temo; 
+      for (int i = 0; i < 12; i++) {
+        temo += v_vertex_data.at(i);
+      }
+       // std::cout << temo << std::endl;
 
       /*
       // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
