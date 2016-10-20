@@ -1,7 +1,7 @@
 bbbbbbbbbbbbbbbbbbbb
 b........bb........b
 b.bb.bbb.bb.bbb.bb.b
-b..................b
+b......x..x..x.....b
 b.bbb.b.bbbb.b.bbb.b
 b.....b..bb..b.....b
 bbbb.bbb.bb.bbb.bbbb

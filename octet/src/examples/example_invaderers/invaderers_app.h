@@ -181,14 +181,14 @@ namespace octet {
       
       game_over_sprite = 0,
 
-      first_invaderer_sprite,
-      last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
-
       first_explosion_sprite,
       last_explosion_sprite = first_explosion_sprite + num_invaderers - 1,
 
       first_path_sprite,
       last_path_sprite = first_path_sprite + num_invaderers - 1,
+
+      first_invaderer_sprite,
+      last_invaderer_sprite = first_invaderer_sprite + num_invaderers - 1,
 
       first_block_sprite,
       last_block_sprite = first_block_sprite + num_blocks - 1,
@@ -257,11 +257,10 @@ namespace octet {
       std::ifstream myfile("pos.txt");
       std::string text; 
       std::string com_line;
-      while (std::getline(myfile, text))
-      {
+      while (std::getline(myfile, text)){
         com_line += text;
       }
-
+      
       // http://www.cplusplus.com/forum/general/100714/ 
       char *chars = new char[com_line.length()];
       std::strcpy(chars, com_line.c_str());
@@ -584,7 +583,10 @@ namespace octet {
             break;
           case 'x':
             //draw invader
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size);
+
             sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size);
+
             //invaderer, ((float)i - num_cols * 0.01f) * 0.5f, 0.0f, 3.0f - ((float)j * 0.25f), 0.1f, 0.1f);
             break;
           case 'b':
@@ -598,7 +600,7 @@ namespace octet {
       }
       
       // set the border to white for clarity
-      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  //yellow
+      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  
       sprites[first_border_sprite + 0].init(white, 0, -3, 0, 6, 0.2f);
       sprites[first_border_sprite + 1].init(white, 0, 3, 0, 6, 0.2f);
       sprites[first_border_sprite + 2].init(white, -3, 0, 0, 0.2f, 6);
