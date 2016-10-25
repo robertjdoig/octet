@@ -44,10 +44,10 @@ namespace octet { namespace shaders {
         void main() { 
 
           vec4 tempColor = vec4(1,1,1,1);
-        //  tempColor.x =  (gl_FragCoord.x / 255.0f);
-        //  tempColor.y =  (gl_FragCoord.y / 255.0f);
-        //  tempColor.z =  (gl_FragCoord.z / 255.0f);
-        //  tempColor.w =  (gl_FragCoord.w / 255.0f);
+         tempColor.x =  (gl_FragCoord.x / 255.0f);
+          tempColor.y =  (gl_FragCoord.y / 255.0f);
+          tempColor.z =  (gl_FragCoord.z / 255.0f);
+          tempColor.w =  (gl_FragCoord.w / 255.0f);
               
           gl_FragColor = texture2D(sampler, uv_) / tempColor;
         

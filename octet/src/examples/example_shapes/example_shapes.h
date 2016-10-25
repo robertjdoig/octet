@@ -24,14 +24,22 @@ namespace octet {
     mesh_instance *m_ball; 
     btRigidBody *rb_ball; 
 
-  
+    btTransform ctWorldTransform;
+   
+    mesh_instance *m_bridge1; 
+    btRigidBody *rb_bridge1;
+
+    mesh_instance *m_bridge2;
+    btRigidBody *rb_bridge2;
+
+
 
     /// this is called once OpenGL is initialized
     void app_init() {
       app_scene_ = new visual_scene();
       app_scene_->create_default_camera_and_lights();
       app_scene_->get_camera_instance(0)->get_node()->translate(vec3(0, 4, 0));
-
+      
       material *red = new material(vec4(1, 0.5, 0, 1));
       material *green = new material(vec4(0.5, 1, 0, 1));
       material *blue = new material(vec4(0, 0, 1, 1));
@@ -40,26 +48,39 @@ namespace octet {
       mat4t mat;
       drawSphere(mat, vec3(-10, 0, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
       
-      btRigidBody *rBa;
+   
+
+     // btRigidBody *rBa;
 
       mat.loadIdentity();
       mat.translate(vec3(-6, 0, 0));
       //material *locMat = new material(_col);
-      mesh_instance *ma = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, false);
-      rBa = ma->get_node()->get_rigid_body();
+      m_bridge1 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, false);
+      rb_bridge1 = m_bridge1->get_node()->get_rigid_body();
 
-      btRigidBody *rBb;
+     // btRigidBody *rBb;
+
       mat.loadIdentity();
-      mat.translate(vec3(-5, 0, 0));
+      mat.translate(vec3(-4, 0, 0));
       //material *locMat = new material(_col);
-      mesh_instance *m = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
-      rBb = m->get_node()->get_rigid_body();
+      m_bridge2 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
+      rb_bridge2 = m_bridge2->get_node()->get_rigid_body();
 
       
 
-     btPoint2PointConstraint pToPCon = btPoint2PointConstraint(*rBa, *rBb, btVector3(1,0,0),btVector3(-1,0,0));
+     // btPoint2PointConstraint pToPCon = btPoint2PointConstraint(*rBa, *rBb, btVector3(1,0,0),btVector3(-1,0,0));
+     //btHingeConstraint* hinge = new btHingeConstraint( 0.0f);
       
-      /*
+     // btHingeConstraint hinge = btHingeConstraint(rBa, rBb,new btTransform(0,btVector3(0,1,0)),btTransform(0,btVector3(0,1,0)));
+     // btHingeConstraint hinge =  new btHingeConstraint(rBa, rBb, btTransform(), btTransform(),false);
+    
+   
+     
+      //ctWorldTransform.setOrigin(pivot);
+      //ctWorldTransform.setRotation(rot);
+     
+     
+     /*
       btRigidBody *rb;
       for (int i = 0; i < 7; i++) {
         mat.loadIdentity();
@@ -99,7 +120,7 @@ namespace octet {
     }
 
     void move_Ball() {
-      printf("%f %f %f\n", ballForce.x(), ballForce.y(), ballForce.z());
+      //printf("%f %f %f\n", ballForce.x(), ballForce.y(), ballForce.z());
 
       // left and right arrows
       if (is_key_down(key_left)) {
@@ -114,10 +135,24 @@ namespace octet {
       rb_ball->applyForce(ballForce, btVector3(0, 0, 0));
     }
 
+    void applyHinge() {
+      ctWorldTransform.setIdentity();
+      btTransform transformInA = rb_bridge1->getCenterOfMassTransform() * ctWorldTransform;
+      btTransform transformInB = rb_bridge2->getCenterOfMassTransform() * ctWorldTransform;
+
+      btHingeConstraint* ct = new btHingeConstraint(*rb_bridge1, *rb_bridge2, transformInA, transformInB,true);
+      double min = -0.174533, max = 0.872665;
+      ct->setLimit(min, max);
+      
+
+      printf("End of Hinge Function \n");
+    }
+
     // this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
      
       move_Ball();
+      applyHinge();
 
       int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
