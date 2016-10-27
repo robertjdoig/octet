@@ -333,6 +333,20 @@ namespace octet { namespace scene {
       #endif
       return result;
     }
+    
+    void applyHinge(btRigidBody* rbA,btRigidBody* rbB, btVector3 pivotInA, btVector3 pivotInB, btVector3 axisInA,btVector3 axisInB) {
+      //create a hinge constraint
+    //  btVector3 pivotInA(0, -0.1f, 0);
+    //  btVector3 pivotInB(0, 0.1f, 0);
+    //  btVector3 axisInA(0, 0, 1);
+    //  btVector3 axisInB(0, 0, 1);
+      bool useReferenceA = true;
+      btHingeConstraint* hinge = new btHingeConstraint(*rbA, *rbB,
+        pivotInA, pivotInB,
+        axisInA, axisInB,useReferenceA);
+      //hinge->setLimit(0.1f,5.1f);
+      world->addConstraint(hinge);
+    }
    
     /// Serialization
     void visit(visitor &v) {

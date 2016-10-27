@@ -26,6 +26,13 @@ namespace octet {
 
     btTransform ctWorldTransform;
    
+    mesh_instance *m_lBank; 
+    btRigidBody *rb_lBank;
+
+    int no_planks = 9;
+    mesh_instance *m_bridge[9]; 
+    btRigidBody *rb_bridge[9];
+
     mesh_instance *m_bridge1; 
     btRigidBody *rb_bridge1;
 
@@ -48,24 +55,40 @@ namespace octet {
       mat4t mat;
       drawSphere(mat, vec3(-10, 0, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
       
-   
+      mat.loadIdentity();
+      mat.translate(vec3(-10, 0, 0));
+      m_bridge[0] = app_scene_->add_shape(mat, new mesh_box(vec3(3, 1, 50)), green, false);
+      rb_bridge[0] = m_bridge[0]->get_node()->get_rigid_body();
+      
+      for (int i = 1; i < no_planks-1; i++) {
+        mat.loadIdentity();
+        mat.translate(vec3(-8+(i*2), 0, 0));
+        m_bridge[i] = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
+        rb_bridge[i] = m_bridge[i]->get_node()->get_rigid_body();
+    }
+    
+      mat.loadIdentity();
+      mat.translate(vec3(10, 0, 0));
+      m_bridge[no_planks-1] = app_scene_->add_shape(mat, new mesh_box(vec3(3, 1, 50)), green, false);
+      rb_bridge[no_planks-1] = m_bridge[no_planks-1]->get_node()->get_rigid_body();
+
 
      // btRigidBody *rBa;
-
+      /*
       mat.loadIdentity();
       mat.translate(vec3(-6, 0, 0));
       //material *locMat = new material(_col);
-      m_bridge1 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, false);
+      m_bridge1 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
       rb_bridge1 = m_bridge1->get_node()->get_rigid_body();
 
      // btRigidBody *rBb;
-
+      
       mat.loadIdentity();
       mat.translate(vec3(-4, 0, 0));
       //material *locMat = new material(_col);
-      m_bridge2 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
+      m_bridge2 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, false);
       rb_bridge2 = m_bridge2->get_node()->get_rigid_body();
-
+      */
       
 
      // btPoint2PointConstraint pToPCon = btPoint2PointConstraint(*rBa, *rBb, btVector3(1,0,0),btVector3(-1,0,0));
@@ -92,10 +115,9 @@ namespace octet {
       */
 
 
-
       // ground
-      drawBox(mat, vec3(-10, 0, 0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //left
-      drawBox(mat, vec3(10, 0, 0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //right
+     // drawBox(mat, vec3(-10, 0, 0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //left
+     // drawBox(mat, vec3(10, 0, 0), vec3(3, 1, 50), vec4(0.2f, 1, 0.2f, 1), false); //right
 
       drawBox(mat, vec3(0, -3, 0), vec3(50, 1, 50), vec4(0.2f, 0.2f, 1.0f, 1), false); //water
 
@@ -136,14 +158,10 @@ namespace octet {
     }
 
     void applyHinge() {
-      ctWorldTransform.setIdentity();
-      btTransform transformInA = rb_bridge1->getCenterOfMassTransform() * ctWorldTransform;
-      btTransform transformInB = rb_bridge2->getCenterOfMassTransform() * ctWorldTransform;
-
-      btHingeConstraint* ct = new btHingeConstraint(*rb_bridge1, *rb_bridge2, transformInA, transformInB,true);
-      double min = -0.174533, max = 0.872665;
-      ct->setLimit(min, max);
-      
+      //runs thru the array of the bridge to apply the hinge to each object 
+      for (int i = 0; i < no_planks-1; i++) {
+        app_scene_->applyHinge(rb_bridge[i], rb_bridge[i + 1], btVector3(1.5f, 0, 0), btVector3(1.5f, 0, 0), btVector3(0, 0, 1), btVector3(0, 0, 1));
+      }
 
       printf("End of Hinge Function \n");
     }
