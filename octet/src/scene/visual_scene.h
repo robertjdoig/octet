@@ -344,7 +344,7 @@ namespace octet { namespace scene {
       btHingeConstraint* hinge = new btHingeConstraint(*rbA, *rbB,
         pivotInA, pivotInB,
         axisInA, axisInB,useReferenceA);
-      //hinge->setLimit(0.1f,5.1f);
+      //hinge->setLimit(0,0.05f);
       world->addConstraint(hinge);
     }
    

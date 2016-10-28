@@ -47,29 +47,29 @@ namespace octet {
       app_scene_->create_default_camera_and_lights();
       app_scene_->get_camera_instance(0)->get_node()->translate(vec3(0, 4, 0));
       
-      material *red = new material(vec4(1, 0.5, 0, 1));
+      material *orange = new material(vec4(1, 0.5, 0, 1));
       material *green = new material(vec4(0.5, 1, 0, 1));
       material *blue = new material(vec4(0, 0, 1, 1));
       material *black = new material(vec4(0, 0, 0, 1));
 
       mat4t mat;
-      drawSphere(mat, vec3(-10, 0, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
+      drawSphere(mat, vec3(0, 5, 0), vec3(1, 1, 1), 0.5f, vec4(1, 1, 0, 1), true);
       
       mat.loadIdentity();
-      mat.translate(vec3(-10, 0, 0));
-      m_bridge[0] = app_scene_->add_shape(mat, new mesh_box(vec3(3, 1, 50)), green, false);
+      mat.translate(vec3(-11, 0, 0));
+      m_bridge[0] = app_scene_->add_shape(mat, new mesh_box(vec3(1, 1, 50)), green, false);
       rb_bridge[0] = m_bridge[0]->get_node()->get_rigid_body();
       
       for (int i = 1; i < no_planks-1; i++) {
         mat.loadIdentity();
         mat.translate(vec3(-8+(i*2), 0, 0));
-        m_bridge[i] = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
+        m_bridge[i] = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), orange, true);
         rb_bridge[i] = m_bridge[i]->get_node()->get_rigid_body();
     }
     
       mat.loadIdentity();
-      mat.translate(vec3(10, 0, 0));
-      m_bridge[no_planks-1] = app_scene_->add_shape(mat, new mesh_box(vec3(3, 1, 50)), green, false);
+      mat.translate(vec3(11, 0, 0));
+      m_bridge[no_planks-1] = app_scene_->add_shape(mat, new mesh_box(vec3(1, 1, 50)), green, false);
       rb_bridge[no_planks-1] = m_bridge[no_planks-1]->get_node()->get_rigid_body();
 
 
@@ -160,7 +160,7 @@ namespace octet {
     void applyHinge() {
       //runs thru the array of the bridge to apply the hinge to each object 
       for (int i = 0; i < no_planks-1; i++) {
-        app_scene_->applyHinge(rb_bridge[i], rb_bridge[i + 1], btVector3(1.5f, 0, 0), btVector3(1.5f, 0, 0), btVector3(0, 0, 1), btVector3(0, 0, 1));
+        app_scene_->applyHinge(rb_bridge[i], rb_bridge[i + 1], btVector3(1, 0, 0), btVector3(-1, 0, 0), btVector3(0, 0, 1), btVector3(0, 0, 1));
       }
 
       printf("End of Hinge Function \n");
