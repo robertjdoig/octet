@@ -333,7 +333,7 @@ namespace octet { namespace scene {
       #endif
       return result;
     }
-    
+    /*
     void applyHinge(btRigidBody* rbA,btRigidBody* rbB, btVector3 pivotInA, btVector3 pivotInB, btVector3 axisInA,btVector3 axisInB) {
       //create a hinge constraint
     //  btVector3 pivotInA(0, -0.1f, 0);
@@ -347,7 +347,7 @@ namespace octet { namespace scene {
       //hinge->setLimit(0,0.05f);
       world->addConstraint(hinge);
     }
-   
+   */
     /// Serialization
     void visit(visitor &v) {
       scene_node::visit(v);

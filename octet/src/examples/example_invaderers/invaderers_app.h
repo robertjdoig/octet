@@ -403,7 +403,8 @@ namespace octet {
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, font_texture);
 
-      shader.render(modelToProjection, 0);
+      float colourArray[4] = { 1,0.5f,1,1 };
+      shader.render(modelToProjection, 0,colourArray );
 
       glVertexAttribPointer(attribute_pos, 3, GL_FLOAT, GL_FALSE, sizeof(bitmap_font::vertex), (void*)&vertices[0].x);
       glEnableVertexAttribArray(attribute_pos);
@@ -429,15 +430,20 @@ namespace octet {
       cameraToWorld.loadIdentity();
       cameraToWorld.translate(0, 0, 3);
 
+      float white[4] = { 1,1,1,1 };
+      float orange[4] = { 1,0.5f,0,1 };
+      float yellow[4] = { 1,1,0,1 };
+      float green[4] = { 0,1,0,1 };
+
       font_texture = resource_dict::get_texture_handle(GL_RGBA, "assets/big_0.gif");
 
       GLuint ship = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/ship.gif");
 
-
-      sprites[ship_sprite].init(ship, 0, -2.75f, 0, 0.15f, 0.15f);
+     
+      sprites[ship_sprite].init(ship, 0, -2.75f, 0, 0.15f, 0.15f, white);
 
       GLuint GameOver = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/GameOver.gif");
-      sprites[game_over_sprite].init(GameOver, 20, 0, 0, 3, 1.5f);
+      sprites[game_over_sprite].init(GameOver, 20, 0, 0, 3, 1.5f, white);
 
       GLuint invaderer = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/invaderer.gif");
       GLuint brick = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/brick_sprite.gif");
@@ -461,20 +467,20 @@ namespace octet {
           switch (read_file(i + j*num_cols)) {
           case '.':
             //Draw Path
-            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size);
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, yellow);
 
             break;
           case 'x':
             //draw invader
-            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size);
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, yellow);
 
-            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size);
+            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size, green);
 
             //invaderer, ((float)i - num_cols * 0.01f) * 0.5f, 0.0f, 3.0f - ((float)j * 0.25f), 0.1f, 0.1f);
             break;
           case 'b':
             //draw block 
-            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, tile_size, tile_size);
+            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, tile_size, tile_size, orange);
             break;
           default:
             std::cout << "not reading the level file";
@@ -483,11 +489,11 @@ namespace octet {
       }
       
       // set the border to white for clarity
-      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  
-      sprites[first_border_sprite + 0].init(white, 0, -3, 0, 6, 0.2f);
-      sprites[first_border_sprite + 1].init(white, 0, 3, 0, 6, 0.2f);
-      sprites[first_border_sprite + 2].init(white, -3, 0, 0, 0.2f, 6);
-      sprites[first_border_sprite + 3].init(white, 3, 0, 0, 0.2f, 6);
+      GLuint col_white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");  
+      sprites[first_border_sprite + 0].init(col_white, 0, -3, 0, 6, 0.2f, white);
+      sprites[first_border_sprite + 1].init(col_white, 0, 3, 0, 6, 0.2f, white);
+      sprites[first_border_sprite + 2].init(col_white, -3, 0, 0, 0.2f, 6, white);
+      sprites[first_border_sprite + 3].init(col_white, 3, 0, 0, 0.2f, 6, white);
       
 
       // use the missile texture
@@ -495,7 +501,7 @@ namespace octet {
       //missile = resource_dict::get_texture_handle(GL_RGBA, "#fff200");
       for (int i = 0; i != num_missiles; ++i) {
         // create missiles off-screen
-        sprites[first_missile_sprite + i].init(missile, 20, 0, 0, 0.15f, 0.15f);
+        sprites[first_missile_sprite + i].init(missile, 20, 0, 0, 0.15f, 0.15f, white);
         sprites[first_missile_sprite + i].is_enabled() = false;
       }
 
@@ -503,7 +509,7 @@ namespace octet {
       GLuint bomb = resource_dict::get_texture_handle(GL_RGBA, "assets/invaderers/bomb.gif");
       for (int i = 0; i != num_bombs; ++i) {
         // create bombs off-screen
-        sprites[first_bomb_sprite + i].init(bomb, 20, 0, 0, 0.0625f, 0.25f);
+        sprites[first_bomb_sprite + i].init(bomb, 20, 0, 0, 0.0625f, 0.25f, white);
         sprites[first_bomb_sprite + i].is_enabled() = false;
       }
 

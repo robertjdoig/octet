@@ -15,6 +15,8 @@ namespace octet { namespace shaders {
 
     // index for texture sampler
     GLuint samplerIndex_;
+    GLuint colour_;
+
   public:
     void init() {
       // this is the vertex shader.
@@ -40,16 +42,18 @@ namespace octet { namespace shaders {
         varying vec2 uv_;
         uniform sampler2D sampler;
         //uniform sampler2D bump;
-        
+        uniform vec4 colour_;
         void main() { 
 
           vec4 tempColor = vec4(1,1,1,1);
-         tempColor.x =  (gl_FragCoord.x / 255.0f);
-          tempColor.y =  (gl_FragCoord.y / 255.0f);
-          tempColor.z =  (gl_FragCoord.z / 255.0f);
-          tempColor.w =  (gl_FragCoord.w / 255.0f);
-              
-          gl_FragColor = texture2D(sampler, uv_) / tempColor;
+       //  tempColor.x =  (gl_FragCoord.x * (colour_.x*10));
+       //  tempColor.y =  (gl_FragCoord.y * colour_.y);
+       //  tempColor.z =  (gl_FragCoord.x * colour_.z);
+       //  tempColor.w =  (gl_FragCoord.y * colour_.w);
+        
+          tempColor = colour_;
+
+          gl_FragColor = texture2D(sampler, uv_) / (gl_FragCoord.x/(tempColor*300));
         
         }
       );
@@ -61,15 +65,19 @@ namespace octet { namespace shaders {
       // extract the indices of the uniforms to use later
       modelToProjectionIndex_ = glGetUniformLocation(program(), "modelToProjection");
       samplerIndex_ = glGetUniformLocation(program(), "sampler");
+      colour_ = glGetUniformLocation(program(), "colour_");
     }
 
-    void render(const mat4t &modelToProjection, int sampler) {
+    void render(const mat4t &modelToProjection, int sampler, float colourArray[4]) {
+
+      
       // tell openGL to use the program
       shader::render();
 
       // customize the program with uniforms
       glUniform1i(samplerIndex_, sampler);
       glUniformMatrix4fv(modelToProjectionIndex_, 1, GL_FALSE, modelToProjection.get());
+      glUniform4fv(colour_, 1,colourArray);
     }
   };
 }}

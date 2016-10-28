@@ -19,19 +19,24 @@ namespace octet {
 
     // true if this sprite is enabled.
     bool enabled;
+
+    float colour[4] = { 1,1,1,1 };
+
   public:
     sprite() {
       texture = 0;
       enabled = true;
     }
 
-    void init(int _texture, float x, float y, float z, float w, float h) {
+    void init(int _texture, float x, float y, float z, float w, float h, float _colour[4]) {
       modelToWorld.loadIdentity();
       modelToWorld.translate(x, y, z);
       halfWidth = w * 0.5f;
       halfHeight = h * 0.5f;
       texture = _texture;
       enabled = true;
+      for(int i = 0; i < 4; i++)
+      colour[i] = _colour[i];
     }
 
     void render(texture_shader &shader, mat4t &cameraToWorld) {
@@ -49,7 +54,9 @@ namespace octet {
       // use "old skool" rendering
       //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      shader.render(modelToProjection, 0);
+      
+     
+      shader.render(modelToProjection, 0, colour);
 
       // this is an array of the positions of the corners of the sprite in 3D
       // a straight "float" here means this array is being generated here at runtime.
