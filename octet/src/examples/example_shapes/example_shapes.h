@@ -26,19 +26,9 @@ namespace octet {
 
     btTransform ctWorldTransform;
    
-    mesh_instance *m_lBank; 
-    btRigidBody *rb_lBank;
-
     int no_planks = 9;
     mesh_instance *m_bridge[9]; 
     btRigidBody *rb_bridge[9];
-
-    mesh_instance *m_bridge1; 
-    btRigidBody *rb_bridge1;
-
-    mesh_instance *m_bridge2;
-    btRigidBody *rb_bridge2;
-
 
 
     /// this is called once OpenGL is initialized
@@ -72,7 +62,8 @@ namespace octet {
       m_bridge[no_planks-1] = app_scene_->add_shape(mat, new mesh_box(vec3(1, 1, 50)), green, false);
       rb_bridge[no_planks-1] = m_bridge[no_planks-1]->get_node()->get_rigid_body();
 
-
+      applySpring();
+      //applyHinge();
      // btRigidBody *rBa;
       /*
       mat.loadIdentity();
@@ -156,21 +147,19 @@ namespace octet {
       }
       rb_ball->applyForce(ballForce, btVector3(0, 0, 0));
     }
-
-    void applyHinge() {
-      //runs thru the array of the bridge to apply the hinge to each object 
-      for (int i = 0; i < no_planks-1; i++) {
-        app_scene_->applyHinge(rb_bridge[i], rb_bridge[i + 1], btVector3(1, 0, 0), btVector3(-1, 0, 0), btVector3(0, 0, 1), btVector3(0, 0, 1));
+   
+    void applySpring() {
+      for (int i = 0; i < no_planks - 1; i++) {
+        app_scene_->applySpring(rb_bridge[i], rb_bridge[i + 1],0.8f);
       }
-
-      printf("End of Hinge Function \n");
     }
 
     // this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
      
       move_Ball();
-      applyHinge();
+     // applyHinge();
+     
 
       int vx = 0, vy = 0;
       get_viewport_size(vx, vy);

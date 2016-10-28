@@ -333,7 +333,8 @@ namespace octet { namespace scene {
       #endif
       return result;
     }
-    /*
+    
+#ifdef OCTET_BULLET
     void applyHinge(btRigidBody* rbA,btRigidBody* rbB, btVector3 pivotInA, btVector3 pivotInB, btVector3 axisInA,btVector3 axisInB) {
       //create a hinge constraint
     //  btVector3 pivotInA(0, -0.1f, 0);
@@ -347,7 +348,29 @@ namespace octet { namespace scene {
       //hinge->setLimit(0,0.05f);
       world->addConstraint(hinge);
     }
-   */
+
+    void applySpring(btRigidBody *rbA, btRigidBody *rbB,float width) {
+      btTransform tran1 = btTransform::getIdentity();
+      tran1.setOrigin(btVector3(width, 0, 0));
+
+      btTransform tran2 = btTransform::getIdentity();
+      tran2.setOrigin(btVector3(-width, 0, 0));
+
+
+      btGeneric6DofSpringConstraint* spring = new btGeneric6DofSpringConstraint(*rbA, *rbB, tran1, tran2, true);
+      spring->setStiffness(0, btScalar(25));
+      spring->setLinearLowerLimit(btVector3(0, 0, 0));
+      spring->setLinearUpperLimit(btVector3(1, 0, 0));
+
+      spring->enableSpring(0, true);
+      spring->setDamping(0, btScalar(0.5f));
+     
+      world->addConstraint(spring);
+    }
+
+
+#endif // OCTET_BULLET
+
     /// Serialization
     void visit(visitor &v) {
       scene_node::visit(v);
