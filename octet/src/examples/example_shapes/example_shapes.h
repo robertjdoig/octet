@@ -63,25 +63,7 @@ namespace octet {
       rb_bridge[no_planks-1] = m_bridge[no_planks-1]->get_node()->get_rigid_body();
 
       applySpring();
-      //applyHinge();
-     // btRigidBody *rBa;
-      /*
-      mat.loadIdentity();
-      mat.translate(vec3(-6, 0, 0));
-      //material *locMat = new material(_col);
-      m_bridge1 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, true);
-      rb_bridge1 = m_bridge1->get_node()->get_rigid_body();
-
-     // btRigidBody *rBb;
-      
-      mat.loadIdentity();
-      mat.translate(vec3(-4, 0, 0));
-      //material *locMat = new material(_col);
-      m_bridge2 = app_scene_->add_shape(mat, new mesh_box(vec3(0.8f, 0.1f, 10)), red, false);
-      rb_bridge2 = m_bridge2->get_node()->get_rigid_body();
-      */
-      
-
+   
      // btPoint2PointConstraint pToPCon = btPoint2PointConstraint(*rBa, *rBb, btVector3(1,0,0),btVector3(-1,0,0));
      //btHingeConstraint* hinge = new btHingeConstraint( 0.0f);
       
@@ -135,17 +117,17 @@ namespace octet {
     void move_Ball() {
       //printf("%f %f %f\n", ballForce.x(), ballForce.y(), ballForce.z());
 
-      // left and right arrows
-      if (is_key_down(key_left)) {
-        ballForce += btVector3(-0.5f, 0, 0);
-      }
-      else if (is_key_down(key_right)) {
-        ballForce += btVector3(0.5f, 0, 0);
-      }
-      else {
-        ballForce = btVector3(0, 0, 0);
-      }
-      rb_ball->applyForce(ballForce, btVector3(0, 0, 0));
+        // left and right arrows
+        if (is_key_down(key_left)) {
+          ballForce += btVector3(-0.5f, 0, 0);
+        }
+        else if (is_key_down(key_right)) {
+          ballForce += btVector3(0.5f, 0, 0);
+        }
+        else {
+          ballForce = btVector3(0, 0, 0);
+        }
+        rb_ball->applyForce(ballForce, btVector3(0, 0, 0));
     }
    
     void applySpring() {
