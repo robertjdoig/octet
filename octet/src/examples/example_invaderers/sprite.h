@@ -22,6 +22,8 @@ namespace octet {
 
     float colour[4] = { 1,1,1,1 };
 
+    float time; 
+
   public:
     sprite() {
       texture = 0;
@@ -37,6 +39,7 @@ namespace octet {
       enabled = true;
       for(int i = 0; i < 4; i++)
       colour[i] = _colour[i];
+ 
     }
 
     void render(texture_shader &shader, mat4t &cameraToWorld) {

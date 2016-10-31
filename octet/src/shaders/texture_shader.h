@@ -41,20 +41,17 @@ namespace octet { namespace shaders {
       const char fragment_shader[] = SHADER_STR(
         varying vec2 uv_;
         uniform sampler2D sampler;
-        //uniform sampler2D bump;
         uniform vec4 colour_;
+
+        //http://glslsandbox.com/e#36439.0 The digit camo code which is added to the texture sampler. 
+
         void main() { 
+          
+          colour_.x += fract(sin(length(floor(gl_FragCoord.xy / 2.0f))));
+          colour_.y += fract(tan(length(floor(gl_FragCoord.xy / 2.0f))));
+          colour_.z += fract(cos(length(floor(gl_FragCoord.xy / 2.0f))));
 
-          vec4 tempColor = vec4(1,1,1,1);
-       //  tempColor.x =  (gl_FragCoord.x * (colour_.x*10));
-       //  tempColor.y =  (gl_FragCoord.y * colour_.y);
-       //  tempColor.z =  (gl_FragCoord.x * colour_.z);
-       //  tempColor.w =  (gl_FragCoord.y * colour_.w);
-        
-          tempColor = colour_;
-
-          gl_FragColor = texture2D(sampler, uv_) / (gl_FragCoord.x/(tempColor*300));
-        
+          gl_FragColor = (texture2D(sampler, uv_)*colour_);
         }
       );
     
@@ -69,8 +66,6 @@ namespace octet { namespace shaders {
     }
 
     void render(const mat4t &modelToProjection, int sampler, float colourArray[4]) {
-
-      
       // tell openGL to use the program
       shader::render();
 
@@ -78,6 +73,7 @@ namespace octet { namespace shaders {
       glUniform1i(samplerIndex_, sampler);
       glUniformMatrix4fv(modelToProjectionIndex_, 1, GL_FALSE, modelToProjection.get());
       glUniform4fv(colour_, 1,colourArray);
+  
     }
   };
 }}

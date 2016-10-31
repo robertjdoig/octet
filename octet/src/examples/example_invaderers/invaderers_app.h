@@ -205,9 +205,6 @@ namespace octet {
       }
       if (is_key_down(key_down)) {
         sprites[ship_sprite].translate(0, -_ship_velocity, 0);
-       // if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 4])) {
-       //   sprites[ship_sprite].translate(0, +_ship_velocity, 0);
-       // }
         for (int i = 0; i < num_blocks; i++) {
           if (sprites[ship_sprite].collides_with(sprites[first_block_sprite + i])) {
             sprites[ship_sprite].translate(0,+_ship_velocity, 0);
@@ -216,16 +213,14 @@ namespace octet {
       }
       else if (is_key_down(key_up)) {
         sprites[ship_sprite].translate(0, +_ship_velocity, 0);
-       // if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 5])) {
-       //   sprites[ship_sprite].translate(0, -_ship_velocity, 0);
-       // }
         for (int i = 0; i < num_blocks; i++) {
           if (sprites[ship_sprite].collides_with(sprites[first_block_sprite + i])) {
             sprites[ship_sprite].translate(0,-_ship_velocity, 0);
           }
         }
       }
-  
+     /*
+      //Moves the Ship on the Z axis
       //'s' key
       if (is_key_down(0x57)) {
         sprites[ship_sprite].translate(0, 0, -_ship_velocity);
@@ -240,6 +235,7 @@ namespace octet {
           sprites[ship_sprite].translate(0, 0, -_ship_velocity);
         }
       }
+    */
     }
     
     // fire button (space)
@@ -334,29 +330,6 @@ namespace octet {
       }
     }
 
-    // animate the bombs
-    void move_bombs() {
-      const float bomb_speed = 0.2f;
-      for (int i = 0; i != num_bombs; ++i) {
-        sprite &bomb = sprites[first_bomb_sprite + i];
-        if (bomb.is_enabled()) {
-          bomb.translate(0, -bomb_speed, 0);
-          if (bomb.collides_with(sprites[ship_sprite])) {
-            bomb.is_enabled() = false;
-            bomb.translate(20, 0, 0);
-            bombs_disabled = 50;
-            on_hit_ship();
-            goto next_bomb;
-          }
-          if (bomb.collides_with(sprites[first_border_sprite + 0])) {
-            bomb.is_enabled() = false;
-            bomb.translate(20, 0, 0);
-          }
-        }
-      next_bomb:;
-      }
-    }
-
     // move the array of enemies
     void move_invaders(float dx, float dy, float dz) {
       for (int j = 0; j != num_invaderers; ++j) {
@@ -403,8 +376,8 @@ namespace octet {
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, font_texture);
 
-      float colourArray[4] = { 1,0.5f,1,1 };
-      shader.render(modelToProjection, 0,colourArray );
+      float colourArray[4] = { 1,1,1,1 };
+      shader.render(modelToProjection, 0,colourArray);
 
       glVertexAttribPointer(attribute_pos, 3, GL_FLOAT, GL_FALSE, sizeof(bitmap_font::vertex), (void*)&vertices[0].x);
       glEnableVertexAttribArray(attribute_pos);
@@ -431,9 +404,9 @@ namespace octet {
       cameraToWorld.translate(0, 0, 3);
 
       float white[4] = { 1,1,1,1 };
-      float orange[4] = { 1,0.5f,0,1 };
-      float yellow[4] = { 1,1,0,1 };
-      float green[4] = { 0,1,0,1 };
+      float block_col[4] = { 0.7f,0.5f,0,1 };
+      float path_col[4] = { 0.5f,0.5f,0,0.7f };
+      float invader_col[4] = { 1,0.5f,1,1 };
 
       font_texture = resource_dict::get_texture_handle(GL_RGBA, "assets/big_0.gif");
 
@@ -454,11 +427,6 @@ namespace octet {
       for (int j = 0; j != num_rows; j++) {
         for (int i = 0; i != num_cols; i++) {
 
-          //assert(first_invaderer_sprite + i + j*num_cols <= last_invaderer_sprite);
-
-          // sprites[first_invaderer_sprite + i + j*num_cols].init(
-           //  invaderer, ((float)i - num_cols * 0.5f) * 0.5f, 2.50f - ((float)j * 0.5f), 0.25f, 0.25f);
-
            // Draws the sprite that has been selected
           float tile_size = 0.25f; 
           float x = ((float)i - num_cols * 0.5f) * tile_size;
@@ -467,21 +435,21 @@ namespace octet {
           switch (read_file(i + j*num_cols)) {
           case '.':
             //Draw Path
-            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, yellow);
-
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, path_col);
             break;
+
           case 'x':
-            //draw invader
-            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, yellow);
-
-            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size, green);
-
-            //invaderer, ((float)i - num_cols * 0.01f) * 0.5f, 0.0f, 3.0f - ((float)j * 0.25f), 0.1f, 0.1f);
+            //draw path
+            sprites[first_path_sprite + i + j*num_cols].init(path, x, y, 0.0f, tile_size, tile_size, path_col);
+            //draw Invaderer
+            sprites[first_invaderer_sprite + i + j*num_cols].init( invaderer, x, y, 0.0f, tile_size, tile_size, invader_col);
             break;
+
           case 'b':
             //draw block 
-            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, tile_size, tile_size, orange);
+            sprites[first_block_sprite + i + j*num_cols].init(brick, x, y, 0.0f, tile_size, tile_size, block_col);
             break;
+
           default:
             std::cout << "not reading the level file";
           }
@@ -540,14 +508,7 @@ namespace octet {
 
       fire_missiles();
 
-     // fire_bombs();
-
       bomb_timer();
-
-      move_bombs();
-
-     // move_invaders(invader_velocity, 0, 0);
-
 
       sprite &border = sprites[first_border_sprite + (invader_velocity < 0 ? 2 : 3)];
       if (invaders_collide(border)) {
@@ -555,7 +516,7 @@ namespace octet {
         move_invaders(invader_velocity, -0.1f, 0);
       }
 
-    
+     
     }
 
     // this is called to draw the world
@@ -588,6 +549,8 @@ namespace octet {
       // move the listener with the camera
       vec4 &cpos = cameraToWorld.w();
       alListener3f(AL_POSITION, cpos.x(), cpos.y(), cpos.z());
+      
+     
     }
   };
 }
