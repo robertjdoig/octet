@@ -7,6 +7,7 @@
 // Scene Node heirachy
 //
 
+
 namespace octet { namespace scene {
   /// Visual scene; contains instances of meshes, cameras and lights required to draw a scene.
   class visual_scene : public scene_node {
@@ -45,14 +46,15 @@ namespace octet { namespace scene {
 
     /// shaders to draw triangles
     ref<bump_shader> object_shader;
-    ref<bump_shader> skin_shader;
+    ref<bump_shader> skin_shader; 
 
     #ifdef OCTET_BULLET
+
       btDefaultCollisionConfiguration config;       /// setup for the world
       btCollisionDispatcher *dispatcher;            /// handler for collisions between objects
       btDbvtBroadphase *broadphase;                 /// handler for broadphase (rough) collision
       btSequentialImpulseConstraintSolver *solver;  /// handler to resolve collisions
-      btDiscreteDynamicsWorld *world;             /// physics world, contains rigid bodies
+      btDiscreteDynamicsWorld *world;/// physics world, contains rigid bodies
       typedef btCollisionShape collison_shape_t;
     #else
       typedef void collison_shape_t;
@@ -361,15 +363,21 @@ namespace octet { namespace scene {
       //spring->setAxis(btVector3(1, 0, 0), btVector3(1, 0, 0));
       spring->setStiffness(0, btScalar(25));
       spring->setLinearLowerLimit(btVector3(0, 0, 0));
-      spring->setLinearUpperLimit(btVector3(1, 0, 0));
+      spring->setLinearUpperLimit(btVector3(0.5f, 0, 0));
 
       spring->enableSpring(0, true);
       spring->setDamping(0, btScalar(0.5f));
       
      
-      world->addConstraint(spring);
+      world->addConstraint(spring,true);
     }
-
+    /*
+    void add_softSphere() {
+      
+      btSoftBody* psb = btSoftBodyHelpers::CreateEllipsoid( world->getWorldUserInfo(), btVector3(35, 25, 0));
+     
+    }
+    */
 
 #endif // OCTET_BULLET
 
