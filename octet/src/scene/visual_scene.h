@@ -337,37 +337,35 @@ namespace octet { namespace scene {
     }
     
 #ifdef OCTET_BULLET
-    void applyHinge(btRigidBody* rbA,btRigidBody* rbB, btVector3 pivotInA, btVector3 pivotInB, btVector3 axisInA,btVector3 axisInB) {
+    void applyHinge(btRigidBody* rbA, btVector3 pivotInA, btVector3 axisInA ) {
       //create a hinge constraint
     //  btVector3 pivotInA(0, -0.1f, 0);
     //  btVector3 pivotInB(0, 0.1f, 0);
     //  btVector3 axisInA(0, 0, 1);
     //  btVector3 axisInB(0, 0, 1);
       bool useReferenceA = true;
-      btHingeConstraint* hinge = new btHingeConstraint(*rbA, *rbB,
-        pivotInA, pivotInB,
-        axisInA, axisInB,useReferenceA);
+      btHingeConstraint* hinge = new btHingeConstraint(*rbA, pivotInA,
+        axisInA, useReferenceA);
       //hinge->setLimit(0,0.05f);
       world->addConstraint(hinge);
     }
 
-    void applySpring(btRigidBody *rbA, btRigidBody *rbB,float width) {
+    void applySpring(btRigidBody *rbA, btRigidBody *rbB,float width, float depth) {
       btTransform tran1 = btTransform::getIdentity();
-      tran1.setOrigin(btVector3(width, 0, 0));
+      tran1.setOrigin(btVector3(width, 0, depth));
 
       btTransform tran2 = btTransform::getIdentity();
-      tran2.setOrigin(btVector3(-width, 0, 0));
+      tran2.setOrigin(btVector3(-width, 0, depth));
 
 
       btGeneric6DofSpringConstraint* spring = new btGeneric6DofSpringConstraint(*rbA, *rbB, tran1, tran2, true);
-      //spring->setAxis(btVector3(1, 0, 0), btVector3(1, 0, 0));
-      spring->setStiffness(0, btScalar(25));
+     
       spring->setLinearLowerLimit(btVector3(0, 0, 0));
-      spring->setLinearUpperLimit(btVector3(0.5f, 0, 0));
+      spring->setLinearUpperLimit(btVector3(0.6f, 0, 0));
+      //spring->setDamping(0, btScalar(0.2f));
 
       spring->enableSpring(0, true);
-      spring->setDamping(0, btScalar(0.5f));
-      
+ 
      
       world->addConstraint(spring,true);
     }
