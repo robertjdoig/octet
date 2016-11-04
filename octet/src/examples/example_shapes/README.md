@@ -17,9 +17,9 @@ The implementation of the spring and hinge constraints were added to the visual 
 Spring constraints work on all 6 of the axis. In this implementation we are only working on the X-axis. The function in Bullet physics to use a spring takes in six variables. Two rigid bodies, two pivot points and two axis definitions. 
 
 Explanation of each variable:
-Rigid body A and B are used to get the physical object that is being constrained together. These rigid bodies also have other forces acting on them. For example the weight of the balls on the bridge. 
-The pivot points are the edge of the physics objects that you want to constraint. In this implementation pivot A is the right side of the object and pivot B is the left of the object. This gives a better representation of the real world as the objects are being pulled together from the sides instead of the middle which will result in the object rotating to match each other. 
-The axis variables define which axis of the object they are constraining. If the axis on this example were different then it would flip on of the object around until they had the same orientation. The axis are set to the Z axis on both objects.  
+- Rigid body A and B are used to get the physical object that is being constrained together. These rigid bodies also have other forces acting on them. For example the weight of the balls on the bridge. 
+- The pivot points are the edge of the physics objects that you want to constraint. In this implementation pivot A is the right side of the object and pivot B is the left of the object. This gives a better representation of the real world as the objects are being pulled together from the sides instead of the middle which will result in the object rotating to match each other. 
+- The axis variables define which axis of the object they are constraining. If the axis on this example were different then it would flip on of the object around until they had the same orientation. The axis are set to the Z axis on both objects.  
 
 The way that it is implemented is very simple, there is an array of rigid bodies which are attached to each of the objects of the bridge. There is one less spring constraint then objects and the first and last object are static so that neither gravity nor forces are applied to the banks
 Image of bridge with constraints and objects numbered.  of the bridge.  
