@@ -37,6 +37,9 @@ namespace octet {
     // shader to draw a textured triangle
     texture_shader texture_shader_;
 
+    //Timer
+    int frameCounter = 0;
+
     enum {
       num_sound_sources = 8,
       num_rows = 20,
@@ -377,7 +380,7 @@ namespace octet {
       glBindTexture(GL_TEXTURE_2D, font_texture);
 
       float colourArray[4] = { 1,1,1,1 };
-      shader.render(modelToProjection, 0,colourArray);
+      shader.render(modelToProjection, 0,colourArray, frameCounter);
 
       glVertexAttribPointer(attribute_pos, 3, GL_FLOAT, GL_FALSE, sizeof(bitmap_font::vertex), (void*)&vertices[0].x);
       glEnableVertexAttribArray(attribute_pos);
@@ -403,10 +406,10 @@ namespace octet {
       cameraToWorld.loadIdentity();
       cameraToWorld.translate(0, 0, 3);
 
-      float white[4] = { 1,1,1,1 };
-      float block_col[4] = { 0.7f,0.5f,0,1 };
-      float path_col[4] = { 0.5f,0.5f,0,0.7f };
-      float invader_col[4] = { 1,0.5f,1,1 };
+      float white[4] = { 1, 1, 1, 1 };
+      float block_col[4] = { 0.7f, 0.3f, 0, 1 };
+      float path_col[4] = { 0.7f, 0.7f, 0, 0.9f };
+      float invader_col[4] = { 1, 0.9f, 1, 1 };
 
       font_texture = resource_dict::get_texture_handle(GL_RGBA, "assets/big_0.gif");
 
@@ -539,7 +542,7 @@ namespace octet {
 
       // draw all the sprites
       for (int i = 0; i != num_sprites; ++i) {
-        sprites[i].render(texture_shader_, cameraToWorld);
+        sprites[i].render(texture_shader_, cameraToWorld, frameCounter);
       }
 
       char score_text[32];
@@ -550,7 +553,7 @@ namespace octet {
       vec4 &cpos = cameraToWorld.w();
       alListener3f(AL_POSITION, cpos.x(), cpos.y(), cpos.z());
       
-     
+      frameCounter++;
     }
   };
 }

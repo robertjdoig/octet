@@ -12,7 +12,6 @@ namespace octet {
     // scene for drawing box
     ref<visual_scene> app_scene_;
 
-    texture_shader texture_shader_;
 
   public:
     example_shapes(int argc, char **argv) : app(argc, argv) {

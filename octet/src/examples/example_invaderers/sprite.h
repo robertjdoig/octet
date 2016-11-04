@@ -42,7 +42,7 @@ namespace octet {
  
     }
 
-    void render(texture_shader &shader, mat4t &cameraToWorld) {
+    void render(texture_shader &shader, mat4t &cameraToWorld, int timer) {
       // invisible sprite... used for gameplay.
       if (!texture) return;
 
@@ -59,7 +59,7 @@ namespace octet {
       //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       
      
-      shader.render(modelToProjection, 0, colour);
+      shader.render(modelToProjection, 0, colour,timer);
 
       // this is an array of the positions of the corners of the sprite in 3D
       // a straight "float" here means this array is being generated here at runtime.
