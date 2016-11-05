@@ -16,8 +16,26 @@ The shader program was adapted to include 4 variables. It passes in a matrix, te
 
 The variables are input to the shader program via the render function. This function is called at runtime to draw the sprites in the game. The inputs are passed to the local variables. 
 
+    void render(const mat4t &modelToProjection, int sampler, float colourArray[4], int time) {
+      // tell openGL to use the program
+      shader::render();
+
+      // customize the program with uniforms
+      glUniform1i(samplerIndex_, sampler);
+      glUniformMatrix4fv(modelToProjectionIndex_, 1, GL_FALSE, modelToProjection.get());
+      glUniform4fv(colourIndex_, 1,colourArray);
+      glUniform1i(timeIndex_, time);
+    }
+
 In the main function of the fragment shader, the red, green, blue channels are calculated by the position on the screen over time. This means that pixelated effect over the existing image is moving. The RGB channels are then multiplied by the colour and the texture of the sprite. This is happening for all the pixels of the sprites. 
 
+    void main() {      
+      float r = fract(sin(length(floor(gl_FragCoord.xy / 5.0) + time))*1e6);
+      float g = fract(cos(length(floor(gl_FragCoord.xy / 3.0) + time))*1e6);
+      float b = fract(tan(length(floor(gl_FragCoord.xy / 1.0) + time))*1e6);
+
+      gl_FragColor = (texture2D(sampler, uv_) * vec4(r, g, b, 1))*colour;
+    }
 
 # CSV level generation 
 
