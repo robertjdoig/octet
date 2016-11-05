@@ -117,5 +117,27 @@ The game play is very simple. The user can move on both the X and Y axis to avoi
 
 The input from the keyboard allows the user to move up, down, left and right from the respected arrow keys. This is handled by the 'is_key_down' function within octet. When the key is being pressed a translation is added to the direction of the arrow. Within this IF statement is nested an second IF statement. This is triggered when the ship is colliding with the block sprite. This negates the translation of the first movement by adding an second translation in the opposite direction. 
 
+    void move_Ball() {
+     // printf("%f %f %f\n", ballForce.x(), ballForce.y(), ballForce.z());
+
+        // left and right arrows, moving along the X axis
+        if (is_key_down(key_left)) {
+          ballForce += btVector3(-0.3f, 0, 0);
+        }
+        else if (is_key_down(key_right)) {
+          ballForce += btVector3(0.3f, 0, 0);
+        }
+        //Up and Down Arrows, moving along the Z axis
+        else if (is_key_down(key_up)) {
+          ballForce += btVector3(0, 0, -0.1f);
+        }
+        else if (is_key_down(key_down)) {
+          ballForce += btVector3(0, 0, 0.1f);
+        }
+        else {
+          ballForce = btVector3(0, 0, 0);
+        }
+        rb_ball->applyForce(ballForce, btVector3(0, 0, 0));
+    }
 
 When the player has fired a bomb at the invaders is will collide with either a block, border or invader. When this happens the bullet is translated off screen and disabled so that it can be reused. This also happens to the invaders when they are killed. However the blocks and borders are unchanged when hit otherwise you would be able to destroy the level. 
