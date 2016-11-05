@@ -3,7 +3,7 @@
 # Brief 
 Start with the example_shapes and add a bridge using physics constraints. 
 
-# [Video link](http://youtube.com/ "Video Link")
+# [Video link](https://www.youtube.com/watch?v=_qgusqLWf4I&feature=youtu.be "Video Link")
 
 # Introduction 
 
