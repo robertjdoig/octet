@@ -12,7 +12,7 @@ This game is BomberMan, it focuses on a few technical areas.
 
 # Shader Programming 
 
-The shader program was adapted to include 4 variables. It passes in a matrix, texture, colour and a frame counter. These variables are used to create the visual effect. 
+The shader program was adapted to include 4 variables. It passes in a matrix, texture, colour and a frame counter. These variables are used to create the visual effect on all the sprites in the scene. 
 
 The variables are input to the shader program via the render function. This function is called at runtime to draw the sprites in the game. The inputs are passed to the local variables. 
 
