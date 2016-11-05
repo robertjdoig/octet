@@ -14,7 +14,7 @@ This game is BomberMan, it focuses on a few technical areas.
 
 The shader program was adapted to include 4 variables. It passes in a matrix, texture, colour and a frame counter. These variables are used to create the visual effect on all the sprites in the scene. 
 
-The variables are input to the shader program via the render function. This function is called at runtime to draw the sprites in the game. The inputs are passed to the local variables. 
+The variables are input to the shader program via the render function. This function is called at runtime to draw the sprites in the game. The inputs are passed to the local variables. The 'glUniform' function connects the main variable to the shader variable, which allows it to be used in the rest of the shader program. 
 
     void render(const mat4t &modelToProjection, int sampler, float colourArray[4], int time) {
       // tell openGL to use the program
