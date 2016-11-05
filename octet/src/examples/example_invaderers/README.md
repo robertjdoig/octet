@@ -109,6 +109,7 @@ This code has been shortened and is missing the sprite draw calls.
             std::cout << "not reading the level file";
           }
         }
+     }
 
 # Game Play 
 
