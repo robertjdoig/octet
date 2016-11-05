@@ -23,7 +23,7 @@ Explanation of each variable:
 
 The way that the bridge is implemented is very simple, there is an array of rigid bodies which are attached to each of the objects of the bridge. There is one less spring constraint then objects and the first and last object are static so that neither gravity nor forces are applied to the banks.  
 
-![Alt text](/path/to/physicsBridgeLayout.png "Optional title attribute") 
+![Alt text](physicsBrdigeLayout.png "Optional title attribute") 
 
 
 
