@@ -50,3 +50,8 @@ A torque was used in this project to make the cube, which is constrainted by the
 A Hinge constraint brings together two objects, it limits their movement to one axis defined by a three dimentional vector. The hinge will keep the object at the same distance from the pivot point. In this program the box is only allow to rotate on the Z axis. Its position depends on the torque being applied. If a torque was applied on a different axis then the hinge would constraint the box and no effect would be shown.    
 
 
+# Joint Work 
+
+Witek Gawlowski - showed me how to get a Rigidbody into a variable. 
+
+
