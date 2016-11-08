@@ -128,3 +128,12 @@ The input from the keyboard allows the user to move up, down, left and right fro
     }
 
 When the player has fired a bullet at the invaders is will collide with either a block, border or invader. When this happens the bullet is translated off screen and disabled so that it can be reused. This also happens to the invaders when they are killed. However, the blocks and borders are unchanged when hit otherwise you would be able to destroy the level. 
+
+
+# Joint work
+
+Matthew Duddington - worked on the CSV Reader function and level generation switch. 
+
+Louis Bennette - He showed me how to pass a variable to a shader. 
+
+
