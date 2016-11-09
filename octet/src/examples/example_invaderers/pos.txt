@@ -1,22 +1,22 @@
 bbbbbbbbbbbbbbbbbbbb
-b........bb........b
+b.x...x..bbx....x..b
 b.bb.bbb.bb.bbb.bb.b
-b......x..x..x.....b
+b......x..x..x..x..b
 b.bbb.b.bbbb.b.bbb.b
-b.....b..bb..b.....b
+b.....b..bb..b..x..b
 bbbb.bbb.bb.bbb.bbbb
-b.....b..bb..b.....b
-b.bbb.bb....bb.bbb.b
+b..x..b..bb..b.x.x.b
+bxbbb.bb....bb.bbb.b
 b..b...b.bb.b...b..b
-b..b...b.bb.b...b..b
-b.bbb.bb....bb.bbb.b
-b.....b..bb..b.....b
+bx.b.x.b.bb.b...b..b
+b.bbb.bb.xx.bb.bbb.b
+b..x..b..bb..bx....b
 bbbb.bbb.bb.bbb.bbbb
-b.....b..bb..b.....b
+b.....b..bb..bx.x..b
 b.bbb.b.bbbb.b.bbb.b
-b..................b
+bx..x...x.....x..x.b
 b.bb.bbb.bb.bbb.bb.b
-b........bb........b
+b.x..x...bb..x..x..b
 bbbbb..bbbbbbbbbbbbb
 
 

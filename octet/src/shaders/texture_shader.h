@@ -53,9 +53,9 @@ namespace octet { namespace shaders {
 
         void main() { 
           
-          float r = fract(sin(length(floor(gl_FragCoord.xy / 5.0) + time))*1e6);
-          float g = fract(cos(length(floor(gl_FragCoord.xy / 3.0) + time))*1e6);
-          float b = fract(tan(length(floor(gl_FragCoord.xy / 1.0) + time))*1e6);
+          float r = fract(sin(length(floor(gl_FragCoord.xy / 5.0) + (time*0.3f)))*1e6);
+          float g = fract(cos(length(floor(gl_FragCoord.xy / 3.0) + (time*0.5f)))*1e6);
+          float b = fract(tan(length(floor(gl_FragCoord.xy / 1.0) + (time*0.7f)))*1e6);
 
           gl_FragColor = (texture2D(sampler, uv_) * vec4(r, g, b, 1))*colour;
         }

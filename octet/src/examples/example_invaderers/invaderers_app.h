@@ -17,12 +17,6 @@
 //   Audio
 //
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <sstream>
-
 #include "sprite.h"
 
 
@@ -129,7 +123,7 @@ namespace octet {
       //http://stackoverflow.com/questions/13035674/how-to-read-line-by-line-or-a-whole-text-file-at-once
       std::ifstream myfile("pos.txt");
       std::string text; 
-      std::string com_line;
+      static std::string com_line;
       while (std::getline(myfile, text)){
         com_line += text;
       }
@@ -145,7 +139,7 @@ namespace octet {
       myfile.get(chars, num_invaderers+1);
       //*/
       return   chars[arrayPos];
-     // delete [] chars; 
+   
     }
 
 
@@ -222,23 +216,6 @@ namespace octet {
           }
         }
       }
-     /*
-      //Moves the Ship on the Z axis
-      //'s' key
-      if (is_key_down(0x57)) {
-        sprites[ship_sprite].translate(0, 0, -_ship_velocity);
-        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 2])) {
-          sprites[ship_sprite].translate(0, 0, +_ship_velocity);
-        }
-      }
-      //'w' key
-      else if (is_key_down(0x53)) {
-        sprites[ship_sprite].translate(0, 0, +_ship_velocity);
-        if (sprites[ship_sprite].collides_with(sprites[first_border_sprite + 3])) {
-          sprites[ship_sprite].translate(0, 0, -_ship_velocity);
-        }
-      }
-    */
     }
     
     // fire button (space)
