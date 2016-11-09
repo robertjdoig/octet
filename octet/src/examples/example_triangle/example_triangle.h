@@ -29,24 +29,6 @@ namespace octet {
     /// this is called once OpenGL is initialized
     void app_init() {
       shader = new color_shader();
-      /*
-      glGenBuffers(1, &vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      // corners (vertices) of the triangle
-      static const float vertex_data[] = {
-       -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-         0.4f, 0.7f, 0.0f,
-      };
-
-      glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
-
-      */
-
-     
-
      
       noIterations(6);
     }
@@ -92,11 +74,16 @@ namespace octet {
         _x - _halve_width, _y, 0.0f,
         _x + _halve_width, _y + _halve_height, 0.0f,
         _x - _halve_width, _y + _halve_height, 0.0f,
+        _x + _halve_width, _y + _halve_height, 0.0f,
+        _x - _halve_width, _y + _halve_height, 0.0f,
+        _x + _halve_width, _y + _halve_height*2, 0.0f,
+        _x - _halve_width, _y + _halve_height*2, 0.0f,
       };
-
+   
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
 
       glEnableVertexAttribArray(0);
+
 
       // use the buffer we made earlier.
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
@@ -106,23 +93,17 @@ namespace octet {
 
       // draw a triangle
       // glDrawArrays(GL_TRIANGLES, 0, 3);
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, (sizeof(vertex_data)/12));
+  
+
+      ////////////////////////////////////////////////////
+      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      //http://glslsandbox.com/e#36217.0
+      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      /////////////////////////////////////////////////////
     }
 
-    void addData(float _x, float _y, float _halve_width, float _halve_height) {
-       const float vertex_data[] = {
-        _x + _halve_width, _y, 0.0f,
-        _x - _halve_width, _y, 0.0f,
-        _x + _halve_width, _y + _halve_height, 0.0f,
-        _x - _halve_width, _y + _halve_height, 0.0f,
-      };
-      
-       for (int i = 0; i < 12; i++) {
-         v_vertex_data.push_back(vertex_data[i]);
-      }
-      
-    }
-
+ 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
 
@@ -153,28 +134,8 @@ namespace octet {
         if (c == 'a') {
           branch(branch_len);
         }
+
       }
-          addData(0.0f,0.0f,0.1f,0.1f);
-      std::string temo; 
-      for (int i = 0; i < 12; i++) {
-        temo += v_vertex_data.at(i);
-      }
-       // std::cout << temo << std::endl;
-
-      /*
-      // use vertex attribute 0 for our vertices (we could use 1, 2, 3 etc for other things)
-      glEnableVertexAttribArray(0);
-
-      // use the buffer we made earlier.
-      glBindBuffer(GL_ARRAY_BUFFER, vertices);
-
-      // tell OpenGL what kind of vertices we have
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4*sizeof(float), NULL);
-
-      // draw a triangle
-     // glDrawArrays(GL_TRIANGLES, 0, 3);
-      glDrawArrays(GL_QUADS, 0, 4);
-      */
     }
   };
 }
