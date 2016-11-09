@@ -12,7 +12,6 @@ namespace octet {
     // scene for drawing box
     ref<visual_scene> app_scene_;
 
-
   public:
     example_shapes(int argc, char **argv) : app(argc, argv) {
     }
@@ -28,7 +27,6 @@ namespace octet {
     btRigidBody *rb_ball; 
 
     btRigidBody *rb_swing;
-
 
     btTransform ctWorldTransform;
    
@@ -133,7 +131,7 @@ namespace octet {
     }
 
     void moveSwing() {
-      //rb_swing->applyTorque(btVector3(0, 0, 30));
+      //Adds a rotational force to the box 
       if (is_key_down(0x44))
         rb_swing->applyTorqueImpulse(btVector3(0, 0, 30));
       else if(is_key_down(0x41))
@@ -145,8 +143,11 @@ namespace octet {
      
       //applys a force to the ball to move it around
       move_Ball();
-      //change_mass();
+
+      //Spawns a ball when W is pressed
       spawnBall();
+
+      //Swings the Box on the hinge
       moveSwing();
     
       int vx = 0, vy = 0;
