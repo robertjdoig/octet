@@ -21,7 +21,7 @@ namespace octet {
     float branch_len = 0.2f;
 
     std::string axiom = "a";
-
+    char* chars; 
     //static const float vertex_data[]; 
     
     std::vector<float> v_vertex_data;
@@ -30,54 +30,55 @@ namespace octet {
     void app_init() {
       shader = new color_shader();
      
-      noIterations(6);
+
+      //rule(10);
+ 
+      std::string c = rule(2);
+      printf("%d \n" , c.length());
+      chars = new char[c.length()];
+      std::strcpy(chars, c.c_str());
+
+
     }
 
 
-    void rule() {
+    std::string rule(int _iterations) {
+      for (int i = 0; i < _iterations; i++) {
 
-      std::string tempString; 
-      for (char& c : axiom) {
-        //rule for A
-        if (c == 'a') {
-          tempString += "ab";
+        std::string tempString;
+        for (char& c : axiom) {
+          //rule for A
+          if (c == 'a') {
+            tempString += "ab";
+          }
+          //Rule for B
+          else if (c == 'b') {
+            tempString += "a";
+          }
         }
-        //Rule for B
-        else if (c == 'b') {
-          tempString += "a";
-        }
+        axiom = tempString;
+
       }
-      axiom = tempString;
 
-      std::cout << axiom << std::endl;
+      //std::cout << axiom << std::endl;
 
-    }
-
-    void noIterations(int _iterations) {
-      for (int i = 0; i < _iterations; i++)
-      {
-        rule();
-      }
+      return axiom;
     }
 
     void branch(float _len) {
-      draw_Quad(0.0f, -1.0f, 0.1f,_len);
+      draw_Quad(0,0, 0.1f,_len);
     }
 
-    void draw_Quad(float _x, float _y, float _halve_width, float _halve_height ) {
+    void draw_Quad(float x, float y, float _halve_width, float _halve_height ) {
 
       glGenBuffers(1, &vertices);
       glBindBuffer(GL_ARRAY_BUFFER, vertices);
 
       static const float vertex_data[] = {
-        _x + _halve_width, _y, 0.0f,
-        _x - _halve_width, _y, 0.0f,
-        _x + _halve_width, _y + _halve_height, 0.0f,
-        _x - _halve_width, _y + _halve_height, 0.0f,
-        _x + _halve_width, _y + _halve_height, 0.0f,
-        _x - _halve_width, _y + _halve_height, 0.0f,
-        _x + _halve_width, _y + _halve_height*2, 0.0f,
-        _x - _halve_width, _y + _halve_height*2, 0.0f,
+        x + _halve_width, y, 0.0f,
+        x - _halve_width, y, 0.0f,
+        x + _halve_width, y + _halve_height, 0.0f,
+        x - _halve_width, y + _halve_height, 0.0f,
       };
    
       glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
@@ -130,11 +131,20 @@ namespace octet {
 
       //branch(branch_len);
 
-      for (char& c : axiom) {
-        if (c == 'a') {
+    
+      printf("%d \n", sizeof(chars));
+   
+      for (int i = 0; i < sizeof(chars); i++) {
+        switch (chars[i])
+        {
+        case 'a':
           branch(branch_len);
-        }
-
+          break;
+        case 'b':
+          branch(1.0f);
+        default:
+          break;
+        }   
       }
     }
   };
