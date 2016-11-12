@@ -60,13 +60,22 @@ namespace octet {
 
       }
 
-      //std::cout << axiom << std::endl;
+      std::cout << axiom << std::endl;
 
       return axiom;
     }
 
     void branch(float _len) {
-      draw_Quad(0,0, 0.1f,_len);
+      
+      draw_Quad(_len,0, 0.1f,_len);
+
+      _len *= 0.98f;
+      if (_len > 0.01f) {
+        glPushMatrix();
+        branch(_len);
+        glPopMatrix();
+      }
+
     }
 
     void draw_Quad(float x, float y, float _halve_width, float _halve_height ) {
@@ -129,9 +138,9 @@ namespace octet {
       vec4 emissive_color(1, 1, 0, 1);
       shader->render(modelToProjection, emissive_color);
 
-      //branch(branch_len);
+      branch(branch_len);
 
-    
+    /*
       printf("%d \n", sizeof(chars));
    
       for (int i = 0; i < sizeof(chars); i++) {
@@ -146,6 +155,7 @@ namespace octet {
           break;
         }   
       }
+      */ 
     }
   };
 }
