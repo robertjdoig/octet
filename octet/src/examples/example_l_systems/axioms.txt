@@ -1,0 +1,12 @@
+﻿f f[+f]f[-f]f null null 25.7
+f f[+f]f[-f][f] null null 20.0
+f ff-[-f+f+f]+[+f-f-f] null null 22.5
+x ff f[+x]f[-x]+x null 20.0
+x ff f[+x][-x]fx null 25.7
+x ff f-[[x]+x]+f[+fx]-x null 22.5
+r null null r[+r]r[-r]r 25.7
+r null null r[+r]r[-r][r] 20.0
+r null null rr-[-r+r+r]+[+r-r-r] 22.5
+x null r[+x]r[-x]+x rr 20.0
+x null r[+x][-x]rx rr 25.7
+x null r-[[x]+x]+r[+rx]-x rr 22.5
