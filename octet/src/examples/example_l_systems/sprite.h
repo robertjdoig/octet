@@ -42,7 +42,7 @@ namespace octet {
       colour[3] = colour_.w();
     }
 
-    void render(texture_shader &shader, mat4t &cameraToWorld) {
+    void render(robs_texture_shader &shader, mat4t &cameraToWorld) {
       // invisible sprite... used for gameplay.
       if (!texture) return;
 

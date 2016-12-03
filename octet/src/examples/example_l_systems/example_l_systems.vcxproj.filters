@@ -439,9 +439,6 @@
     <ClInclude Include="tree.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="controls.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="l_systems_app.h">
       <Filter>Source Files</Filter>
     </ClInclude>

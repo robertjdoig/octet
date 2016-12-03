@@ -10,7 +10,7 @@ namespace octet {
   class tree {
   private:
 
-    texture_shader texture_shader_;
+    robs_texture_shader texture_shader_;
 
     GLuint texture;
     vec4 colour = vec4(1, 1, 1, 1);
@@ -23,7 +23,7 @@ namespace octet {
       float branch_length;
     };
 
-    std::vector<position> stack_position; 
+    std::vector<position> stack_position;
 
     position turtle;
 
@@ -32,7 +32,7 @@ namespace octet {
   public:
 
     tree::tree() {}
-    
+
     void setup() {
       texture_shader_.init();
       //texture = resource_dict::get_texture_handle(GL_RGBA, "#792cd6");
@@ -51,24 +51,9 @@ namespace octet {
       for (int i = 0; i != rule_.length(); i++) {
         switch (chars[i]) {
         case 'f':
+        case 'r':
           // Creates the branch at the new location defined in previous rules and adds it to the branch buffer
-          locSprite.init(texture, vec2(0, 0.0f), 0.05f, turtle.branch_length, colour);
-          locSprite.translate(turtle.pos.x(), turtle.pos.y(), 0.0f);
-          locSprite.rotate(turtle.angle, 0, 0, 1);
-          sprites.push_back(locSprite);
-
-          // Shrinking the new branch
-          turtle.branch_length *= shrink_scale;
-          colour.x() *= 0.7f; // Changes the next branch's colour
-
-          // Adding the polar coord to the previous cart coord location
-          tools::polarToCart(turtle.branch_length, turtle.angle, turtle.pos);
-          break;
-        case 'r': {
-          //random prob 
-          // Creates the branch at the new location defined in previous rules and adds it to the branch buffer
-          locSprite.init(texture, vec2(0, 0.0f), 0.05f, turtle.branch_length, colour);
-          locSprite.translate(turtle.pos.x(), turtle.pos.y(), 0.0f);
+          locSprite.init(texture, turtle.pos, 0.05f, turtle.branch_length, colour);
           locSprite.rotate(turtle.angle, 0, 0, 1);
           sprites.push_back(locSprite);
 
@@ -78,8 +63,7 @@ namespace octet {
 
                               // Adding the polar coord to the previous cart coord location
           tools::polarToCart(turtle.branch_length, turtle.angle, turtle.pos);
-
-          break; }
+          break;
         case '-':
           // Turning the branches right;
           turtle.angle -= angle;
@@ -94,7 +78,7 @@ namespace octet {
         case ']':
           colour.x() = 1.0f; // Resets the colour for the next branch
 
-          // Gets the last turtle on the stack
+                             // Gets the last turtle on the stack
           turtle = stack_position.at(stack_position.size() - 1);
           stack_position.pop_back();
           break;
@@ -112,9 +96,9 @@ namespace octet {
       turtle.pos = vec2(0.0f, 0.0f);
       turtle.angle = 0.0f;
       turtle.branch_length = 0.25f;
-      
+
       //Reseting the Start Colour
-      colour = vec4(1, 1, 1, 1); 
+      colour = vec4(1, 1, 1, 1);
     }
 
     // Renders all branches in the sprite buffer

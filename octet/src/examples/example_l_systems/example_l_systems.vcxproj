@@ -215,7 +215,6 @@
     <ClInclude Include="..\..\shaders\shader.h" />
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
-    <ClInclude Include="controls.h" />
     <ClInclude Include="l_systems_app.h" />
     <ClInclude Include="rule.h" />
     <ClInclude Include="sprite.h" />

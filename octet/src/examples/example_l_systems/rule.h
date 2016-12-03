@@ -13,12 +13,15 @@ namespace octet {
       std::string f_rule;
       std::string x_rule;
       std::string r_rule;
-      float angle; 
+      float angle;
     };
 
     std::vector<axiom> rules;
 
     axiom current_axiom;
+
+    int probability_ratio = 50;
+    int state = 0;
   public:
 
     rule::rule() {
@@ -34,28 +37,25 @@ namespace octet {
         rules.push_back(each_rule);
       }
 
-     current_axiom = rules[0];
+      current_axiom = rules[0];
     }
 
     // Switches the rules 
-    void switch_axiom(int state) {
-        current_axiom = rules[state];
+    void set_axiom_state(int change) {
+      state += change;
+    }
+
+    int get_axiom_state() {
+      return state;
     }
 
     float get_angle() {
       return current_axiom.angle;
     }
 
-    std::string get_f_rule() {
-      return current_axiom.f_rule;
-    }
-
-    std::string get_x_rule() {
-      return current_axiom.x_rule;
-    }
-
     // Itterates through the rule and changes the node depending on the rules
     std::string compute_rule(int itteration_) {
+      current_axiom = rules[state];
       for (int i = 0; i != itteration_; i++) {
         std::string tempString;
         for (char& c : current_axiom.node) {
@@ -69,16 +69,32 @@ namespace octet {
           case 'r': {
             int probability = rand() % 100;
             std::cout << probability << "\n";
-            if (probability > 50)
+            if (probability > probability_ratio) {
               tempString += current_axiom.r_rule;
+            }
+            else {
+              tempString += c;
+            }
             break; }
-          default: 
-           tempString += c;
+          default:
+            tempString += c;
           }
         }
         current_axiom.node = tempString;
       }
       return current_axiom.node;
+    }
+
+    void set_probability_ratio(int value_) {
+      probability_ratio += value_;
+    }
+
+    int get_probability_ratio() {
+      return probability_ratio;
+    }
+
+    int get_rule_buffer() {
+      return rules.size();
     }
 
   };

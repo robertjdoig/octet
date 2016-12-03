@@ -23,28 +23,30 @@
 #include "tools.h"
 
 namespace octet {
- 
+
   class l_systems_app : public octet::app {
-       
+
     // Matrix to transform points in our camera space to the world.
     // This lets us move our camera
     mat4t cameraToWorld;
     mat4t textToWorld;
 
     tree tree_;
-    rule rule_; 
+    rule rule_;
 
 
     int rule_state = 0;
     int itterations = 1;
     float angle = 22.7f;
-    vec3 pan = vec3(0,3,3); 
 
-    texture_shader texture_shader_;
+    vec3 pan = vec3(0, 3, 3);
+
+
+    robs_texture_shader texture_shader_;
     GLuint font_texture;
     bitmap_font font;
 
-    void draw_text(texture_shader &shader, float x, float y, float scale, const char *text) {
+    void draw_text(robs_texture_shader &shader, float x, float y, float scale, const char *text) {
       mat4t modelToWorld;
       modelToWorld.loadIdentity();
       modelToWorld.translate(x, y, 0);
@@ -74,7 +76,7 @@ namespace octet {
   public:
 
     // this is called when we construct the class
-    l_systems_app(int argc, char **argv) : app(argc, argv),  font(512, 256, "assets/big.fnt") {
+    l_systems_app(int argc, char **argv) : app(argc, argv), font(512, 256, "assets/big.fnt") {
     }
 
     // this is called once OpenGL is initialized
@@ -83,24 +85,19 @@ namespace octet {
       font_texture = resource_dict::get_texture_handle(GL_RGBA, "assets/big_0.gif");
 
       tree_.setup();
-   
+
       rule_.readfile();
 
-      rule_.switch_axiom(rule_state);
       std::string axiom = rule_.compute_rule(itterations);
-    
+
       tree_.create_tree(axiom, rule_.get_angle(), itterations);
-      
-      // set up the matrices with a camera 5 units from the origin
-      //cameraToWorld.loadIdentity();
-      //cameraToWorld.translate(0,tree_.get_turtle_position().y() *1.01f, tree_.get_turtle_position().y() *1.01f);
     }
 
     void reset_tree() {
 
       tree_.clear_buffer();
 
-      rule_.switch_axiom(rule_state);
+      // rule_.set_axiom(rule_state);
       std::string axiom = rule_.compute_rule(itterations);
 
       tree_.create_tree(axiom, angle, itterations);
@@ -110,16 +107,18 @@ namespace octet {
 
       // 1
       if (is_key_going_up(0x31)) {
-        if (rule_state > 0) {
-          rule_state--;
+        if (rule_.get_axiom_state() > 0) {
+          rule_.set_axiom_state(-1);
+          // rule_state--;
           reset_tree();
           angle = rule_.get_angle();
-       }
+        }
       }
       // 2
       if (is_key_going_up(0x32)) {
-        if (rule_state < 11) {
-          rule_state++;
+        if (rule_.get_axiom_state() < rule_.get_rule_buffer() - 1) {
+          //rule_state++;
+          rule_.set_axiom_state(1);
           reset_tree();
           angle = rule_.get_angle();
         }
@@ -137,16 +136,15 @@ namespace octet {
       if (is_key_going_up(0x34)) {
         // change itterations
         if (itterations < 7) {
-          itterations ++;
+          itterations++;
           reset_tree();
 
         }
       }
-      
-    
+
+
       // 5
       if (is_key_down(0x35)) {
-
         if (angle > 0) {
           angle--;
           reset_tree();
@@ -177,6 +175,27 @@ namespace octet {
         }
       }
 
+      // 9
+      if (is_key_down(0x39)) {
+        if (rule_.get_probability_ratio() > 0) {
+
+          rule_.set_probability_ratio(-1);
+          reset_tree();
+        }
+      }
+      // 0
+      if (is_key_down(0x30)) {
+        if (rule_.get_probability_ratio() < 100) {
+
+          rule_.set_probability_ratio(1);
+          reset_tree();
+        }
+      }
+      // R
+      if (is_key_going_up(0x52)) {
+        reset_tree();
+      }
+
       //zoom in Minus Key
       if (is_key_down(0xBD)) {
         pan.z() += 0.1f;
@@ -204,8 +223,9 @@ namespace octet {
 
     void draw_hud() {
       char score_text[512];
-     
-      sprintf(score_text, "Loops: %d \n Rules: %d \n Angle: %f \n Shrink: %d percent \n", itterations+1, rule_state+1, angle, (int)(tree_.get_shrink_scale()*100));
+
+      const char* text = "Loops: %d \n Rules: %d \n Angle: %f \n Shrink: %d percent \n Probability: %d percent \n";
+      sprintf(score_text, text, itterations + 1, rule_.get_axiom_state() + 1, angle, (int)(tree_.get_shrink_scale() * 100), rule_.get_probability_ratio());
       draw_text(texture_shader_, -2, 5, 0.5f / 256, score_text);
     }
 
@@ -226,7 +246,7 @@ namespace octet {
       // allow alpha blend (transparency when alpha channel is 0)
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      
+
 
       textToWorld.loadIdentity();
       textToWorld.translate(0, 3, 3);
@@ -239,8 +259,6 @@ namespace octet {
       cameraToWorld.translate(pan);
 
       tree_.render(cameraToWorld);
-      
-      
 
       // move the listener with the camera
       vec4 &cpos = cameraToWorld.w();
